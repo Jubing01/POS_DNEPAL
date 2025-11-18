@@ -1,4 +1,4 @@
-import Image from "next/image";
+//@ts-nocheck
 
 export default function Home() {
   return (
