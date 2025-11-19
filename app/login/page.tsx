@@ -21,7 +21,7 @@ export default function Login(){
                 
                 <div className="flex flex-col space-y-2">
                     <label className="text-sm font-medium text-gray-700"> Email</label>
-                    <input type="email" name="email" placeholder="" required onChange={(event) => setEmail(event.target.value)}/> 
+                    <input type="email" name="email" placeholder="Enter your email" required onChange={(event) => setEmail(event.target.value)}/> 
                 </div>
 
                 <div className="flex flex-col space-y-2">
@@ -36,6 +36,4 @@ export default function Login(){
 
         </div>
     );
-
-
 }
