@@ -13,16 +13,13 @@ if (!cached) {
 }
 
 async function dbConnect() {
-  console.log(process.env.MONGODB_URI);
   if (cached.conn) {
     return cached.conn;
   }
-  console.log("1");
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
     };
-    console.log("1");
 
     cached.promise = mongoose
       .connect(process.env.MONGODB_URI as string, opts)
@@ -30,8 +27,6 @@ async function dbConnect() {
         return mongoose;
       });
   }
-  
-  console.log("1");
 
   cached.conn = await cached.promise;
 
