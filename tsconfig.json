@@ -29,6 +29,7 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
+, "app/login/resetnewpassword"  ],
 , "app/admin/product"  ],
   "exclude": ["node_modules"]
 }
