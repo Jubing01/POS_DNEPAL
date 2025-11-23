@@ -1,5 +1,12 @@
 //@ts-nocheck
+'use client'
+
+import { useState } from "react";
+
 export default function ForgotPassword() {
+
+    const [email,setEmail] = useState("")
+
     return(
         <div className="min-h-screen flex items-center justify-center bg-gray-300">
 
@@ -17,8 +24,7 @@ export default function ForgotPassword() {
                             type="email" 
                             name="email"
                             placeholder="Timro email type gara ta" required
-                            className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
+                            className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                     </div>
 
                     <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition ">
