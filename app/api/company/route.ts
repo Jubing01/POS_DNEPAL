@@ -3,17 +3,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import Company from "@/models/Company";
 import dbConnect from "@/lib/mongodb";
+import prisma from "@/lib/prisma";
 
 export async function POST(request: NextRequest) {
   try {
-    await dbConnect();
     const reqBody = await request.json();
 
-    const newCompany = new Company(reqBody);
-    await newCompany.save();
+    const newCompany = await prisma.company.create({
+      data: {
+        name: reqBody.name,
+        address: reqBody.address,
+        email: reqBody.email,
+        phone: reqBody.phone,
+        pan: reqBody.pan,
+        password: reqBody.password,
+      },
+    });
 
     return new NextResponse(
-      JSON.stringify({ message: "Company received", data: reqBody })
+      JSON.stringify({ message: "Company created", data: newCompany })
     );
   } catch (error) {
     console.log(error);
@@ -26,10 +34,10 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    await dbConnect();
-    const packages = await Company.find({});
+    const companies = await prisma.company.findMany();
+
     return new NextResponse(
-      JSON.stringify({ message: "Company fetched", data: packages })
+      JSON.stringify({ message: "Company fetched", data: companies })
     );
   } catch (error) {
     return new NextResponse(

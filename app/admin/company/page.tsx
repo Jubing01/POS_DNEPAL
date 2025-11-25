@@ -48,7 +48,7 @@ const CompanyPage = () => {
           </thead>
           <tbody>
             {companyData.map((company) => (
-              <tr key={company._id} className="hover:bg-gray-50">
+              <tr key={company.id} className="hover:bg-gray-50">
                 <td className="p-2">{company.name}</td>
                 <td className="p-2">{company.address}</td>
                 <td className="p-2">{company.phone}</td>

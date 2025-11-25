@@ -7,13 +7,14 @@ const AddPackagePopup = ({ setAddPackagePopup }) => {
   const [packageData, setPackageData] = useState({
     name: "",
     type: "monthly",
-    maxCustomer: "",
-    maxProduct: "",
-    price: "",
+    maxCustomer: 0,
+    maxProduct: 0,
+    price: 0,
   });
 
   const addDataToPackageData = (e) => {
     const { name, value } = e.target;
+    console.log(name, typeof value);
     setPackageData((prev) => ({
       ...prev,
       [name]: value,
@@ -70,7 +71,7 @@ const AddPackagePopup = ({ setAddPackagePopup }) => {
 
           <div className="mb-2">Max Product</div>
           <input
-            type="type"
+            type="number"
             name="maxProduct"
             placeholder="Maximum Number of Product"
             className="border p-2 rounded w-full mb-4"

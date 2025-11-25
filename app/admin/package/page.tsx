@@ -48,7 +48,7 @@ const PackagePage = () => {
           </thead>
           <tbody>
             {packageData.map((pkg) => (
-              <tr key={pkg._id} className="hover:bg-gray-50">
+              <tr key={pkg.id} className="hover:bg-gray-50">
                 <td className=" p-2">{pkg.name}</td>
                 <td className=" p-2">{pkg.type}</td>
                 <td className=" p-2">{pkg.maxCustomer}</td>

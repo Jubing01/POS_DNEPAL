@@ -71,6 +71,15 @@ const AddCompanyPopup = ({ setAddCompanyPopup }) => {
             onChange={addDataToCompanyData}
           />
 
+          <div className="mb-2">Password</div>
+          <input
+            type="password"
+            name="password"
+            placeholder="Enter Password"
+            className="border p-2 rounded w-full mb-4"
+            onChange={addDataToCompanyData}
+          />
+
           <div className="mb-2">Pan</div>
           <input
             type="text"
