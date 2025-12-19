@@ -1,16 +1,19 @@
 //@ts-nocheck
 'use client'
 import { useState } from "react";
+import axios from "axios";
 
 export default function Login(){    
     const [ email, setEmail ] = useState("")
     const [ password, setPassword ] = useState("")
 
-    const handleLogin = (event) => {
-        event.preventDefault()
-        console.log(email, password);
-        
-    }
+    const handleLogin = async(event) => {
+        event.preventDefault();
+    
+    const response = await axios.post("/api/login", {email, password,});
+
+        console.log("Login response:", response.data);
+    };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">   
