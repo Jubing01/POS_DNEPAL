@@ -4,24 +4,36 @@ import { NextRequest, NextResponse } from "next/server";
 import Company from "@/models/Company";
 import dbConnect from "@/lib/mongodb";
 import prisma from "@/lib/prisma";
+import bcrypt from "bcryptjs";
 
 export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
 
+    const passwordHash = await bcrypt.hash(reqBody.password, 10);
+
     const newCompany = await prisma.company.create({
       data: {
         name: reqBody.name,
         address: reqBody.address,
-        email: reqBody.email,
         phone: reqBody.phone,
         pan: reqBody.pan,
-        password: reqBody.password,
+        users: {
+          create: {
+            name: reqBody.name,
+            email: reqBody.email,
+            password: passwordHash,
+            role: "admin",
+          },
+        },
       },
     });
 
     return new NextResponse(
-      JSON.stringify({ message: "Company created", data: newCompany })
+      JSON.stringify({
+        message: "Company created successfully",
+        data: newCompany,
+      })
     );
   } catch (error) {
     console.log(error);
@@ -34,10 +46,24 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const companies = await prisma.company.findMany();
-
+    const companies = await prisma.company.findMany({
+      select: {
+        id: true,
+        name: true,
+        address: true,
+        phone: true,
+        pan: true,
+        users: {
+          select: {
+            name: true,
+            email: true,
+            role: true,
+          },
+        },
+      },
+    });
     return new NextResponse(
-      JSON.stringify({ message: "Company fetched", data: companies })
+      JSON.stringify({ message: "Company fetched", companies })
     );
   } catch (error) {
     return new NextResponse(

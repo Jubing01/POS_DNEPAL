@@ -1,7 +1,7 @@
 //@ts-nocheck
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma"; // your singleton Prisma client
 
@@ -15,10 +16,13 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return NextResponse.json({
-      message: "Package created",
-      data: newPackage,
-    });
+    return NextResponse.json(
+      {
+        message: "Package created successfully",
+        data: newPackage,
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error(error);
     return NextResponse.json(

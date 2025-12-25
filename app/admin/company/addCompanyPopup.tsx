@@ -1,5 +1,6 @@
 //@ts-nocheck
 "use client";
+import { useAddCompany } from "@/hooks/useCompany";
 import axios from "axios";
 import { useState } from "react";
 
@@ -10,6 +11,7 @@ const AddCompanyPopup = ({ setAddCompanyPopup }) => {
     phone: "",
     email: "",
   });
+  const addCompanyMutation = useAddCompany();
 
   const addDataToCompanyData = (e) => {
     const { name, value } = e.target;
@@ -21,8 +23,7 @@ const AddCompanyPopup = ({ setAddCompanyPopup }) => {
 
   const handleCompanySubmit = async (event) => {
     event.preventDefault();
-    const response = await axios.post("/api/company", companyData);
-    console.log(response.data);
+    addCompanyMutation.mutate(companyData);
   };
 
   return (

@@ -1,18 +1,18 @@
 //@ts-nocheck
 "use client";
-import { useAddPackage } from "@/hooks/usePackage";
+import { useUpdatePackage } from "@/hooks/usePackage";
 import axios from "axios";
 import { useState } from "react";
 
-const AddPackagePopup = ({ setAddPackagePopup }) => {
-  const addPackageMutation = useAddPackage();
+const EditPackagePopup = ({ currentPackage, setEditPackagePopup }) => {
+  const updatePackageMutation = useUpdatePackage();
 
   const [packageData, setPackageData] = useState({
-    name: "",
-    type: "monthly",
-    maxCustomer: 0,
-    maxProduct: 0,
-    price: 0,
+    name: currentPackage?.name,
+    type: currentPackage?.type,
+    maxCustomer: currentPackage?.maxCustomer,
+    maxProduct: currentPackage?.maxProduct,
+    price: currentPackage?.price,
   });
 
   const addDataToPackageData = (e) => {
@@ -23,20 +23,23 @@ const AddPackagePopup = ({ setAddPackagePopup }) => {
     }));
   };
 
-  const handlePackageSubmit = async (event) => {
+  const handlePackageUpdate = async (event) => {
     event.preventDefault();
-    addPackageMutation.mutate(packageData, {
-      onSuccess: () => {
-        setAddPackagePopup(false)
+    updatePackageMutation.mutate(
+      { id: currentPackage.id, packageData },
+      {
+        onSuccess: () => {
+          setEditPackagePopup(null);
+        },
       }
-    });
+    );
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div
         className="absolute inset-0 bg-black opacity-50"
-        onClick={() => setAddPackagePopup(false)}
+        onClick={() => setEditPackagePopup(null)}
       ></div>
 
       <div className="relative bg-gray-100 z-50 p-8 rounded-lg shadow-lg">
@@ -46,6 +49,7 @@ const AddPackagePopup = ({ setAddPackagePopup }) => {
           <input
             type="text"
             name="name"
+            value={packageData.name}
             placeholder="Add New Package Plan Name"
             className="border p-2 rounded w-96 mb-4"
             onChange={addDataToPackageData}
@@ -55,7 +59,7 @@ const AddPackagePopup = ({ setAddPackagePopup }) => {
           <select
             name="type"
             className="border p-2 rounded w-96 mb-4"
-            defaultValue={""}
+            defaultValue={packageData.type}
             onChange={addDataToPackageData}
           >
             <option value="" disabled>
@@ -72,6 +76,7 @@ const AddPackagePopup = ({ setAddPackagePopup }) => {
             placeholder="Maximum Number of Customer"
             className="border p-2 rounded w-96 mb-4"
             onChange={addDataToPackageData}
+            value={packageData.maxCustomer}
           />
 
           <div className="mb-2">Max Product</div>
@@ -81,6 +86,7 @@ const AddPackagePopup = ({ setAddPackagePopup }) => {
             placeholder="Maximum Number of Product"
             className="border p-2 rounded w-96 mb-4"
             onChange={addDataToPackageData}
+            value={packageData.maxProduct}
           />
 
           <div className="mb-2">Price</div>
@@ -90,14 +96,15 @@ const AddPackagePopup = ({ setAddPackagePopup }) => {
             placeholder="Price of the Package"
             className="border p-2 rounded w-96 mb-4"
             onChange={addDataToPackageData}
+            value={packageData.price}
           />
 
           <button
             className="bg-blue-500 text-white py-2 rounded cursor-pointer px-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
-            onClick={handlePackageSubmit}
-            disabled={addPackageMutation.isPending}
+            onClick={handlePackageUpdate}
+            disabled={updatePackageMutation.isPending}
           >
-            {addPackageMutation.isPending ? "Adding Package..." : "Submit"}
+            {updatePackageMutation.isPending ? "Updating Package..." : "Update"}
           </button>
         </form>
       </div>
@@ -105,4 +112,4 @@ const AddPackagePopup = ({ setAddPackagePopup }) => {
   );
 };
 
-export default AddPackagePopup;
+export default EditPackagePopup;

@@ -3,24 +3,23 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import AddCompanyPopup from "./addCompanyPopup";
+import { useGetCompanies } from "@/hooks/useCompany";
+import { useGetUsers } from "@/hooks/useUser";
 
 const CompanyPage = () => {
-  const [companyData, setCompanyData] = useState([]);
-
-  const fetchCompany = async () => {
-    try {
-      const response = await axios.get("/api/company");
-      setCompanyData(response.data.data);
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error fetching company:", error);
-    }
-  };
-  useEffect(() => {
-    fetchCompany();
-  }, []);
-
   const [addCompanyPopup, setAddCompanyPopup] = useState(false);
+
+  const {
+    data: companyData,
+    isLoading: isCompanyDataLoading,
+    isError: isCompanyDataError,
+  } = useGetCompanies();
+
+  if (isCompanyDataLoading) {
+    return <>is Loading</>;
+  }
+
+  console.log(companyData);
   return (
     <div>
       <div className="flex justify-between px-12">
@@ -47,15 +46,18 @@ const CompanyPage = () => {
             </tr>
           </thead>
           <tbody>
-            {companyData.map((company) => (
-              <tr key={company.id} className="hover:bg-gray-50">
-                <td className="p-2">{company.name}</td>
-                <td className="p-2">{company.address}</td>
-                <td className="p-2">{company.phone}</td>
-                <td className="p-2">{company.email}</td>
-                <td className="p-2">{company.pan}</td>
-              </tr>
-            ))}
+            {companyData.map((company) => {
+              const user = company.users.find((user) => user.role == "admin");
+              return (
+                <tr key={company.id} className="hover:bg-gray-50">
+                  <td className="p-2">{company.name}</td>
+                  <td className="p-2">{company.address}</td>
+                  <td className="p-2">{company.phone}</td>
+                  <td className="p-2">{user.email}</td>
+                  <td className="p-2">{company.pan}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

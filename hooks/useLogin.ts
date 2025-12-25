@@ -28,7 +28,6 @@ export function useLogout() {
     mutationFn: logout,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["auth", "user"] });
-      console.log("hello");
       router.push("/login");
       toast.success("Logged Out Successfully!!!");
     },
