@@ -10,3 +10,13 @@ export async function addCompany(body) {
   const response = await axios.post("/api/company", body);
   return response;
 }
+
+export async function deleteCompany(id) {
+  const response = await axios.delete(`/api/company/${id}`);
+  return response.data;
+}
+
+export async function updateCompany({ body, id }) {
+  const response = await axios.patch(`/api/company/${id}`, body);
+  return response.data;
+}

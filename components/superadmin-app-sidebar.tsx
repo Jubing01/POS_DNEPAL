@@ -6,7 +6,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-
+import { MdSubscriptions } from "react-icons/md";
 import Link from "next/link";
 
 import { Package, Building } from "lucide-react";
@@ -21,7 +21,12 @@ const superAdminItems = [
     title: "Companies",
     url: "/admin/company",
     icon: Building,
-  }
+  },
+  {
+    title: "Subscription",
+    url: "/admin/subscription",
+    icon: MdSubscriptions,
+  },
 ];
 
 const SuperAdminSectionSidebar = () => {

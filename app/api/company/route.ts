@@ -12,6 +12,22 @@ export async function POST(request: NextRequest) {
 
     const passwordHash = await bcrypt.hash(reqBody.password, 10);
 
+    const startDate = new Date();
+    let endDate = new Date(startDate);
+
+    const givenPackage = await prisma.package.findUnique({
+      where: {
+        id: parseInt(reqBody.packageId),
+      },
+    });
+
+    if (givenPackage.type == "monthly") {
+      endDate.setMonth(endDate.getMonth() + 1);
+    }
+    if (givenPackage.type == "yearly") {
+      endDate.setFullYear(endDate.getFullYear() + 1);
+    }
+
     const newCompany = await prisma.company.create({
       data: {
         name: reqBody.name,
@@ -24,6 +40,14 @@ export async function POST(request: NextRequest) {
             email: reqBody.email,
             password: passwordHash,
             role: "admin",
+          },
+        },
+        subscriptions: {
+          create: {
+            packageId: parseInt(reqBody.packageId),
+            startDate: startDate,
+            endDate: endDate,
+            isActive: true,
           },
         },
       },
@@ -46,7 +70,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const companies = await prisma.company.findMany({
+    const companiesRaw = await prisma.company.findMany({
       select: {
         id: true,
         name: true,
@@ -60,8 +84,30 @@ export async function GET() {
             role: true,
           },
         },
+        subscriptions: {
+          where: {
+            isActive: true,
+          },
+          take: 1,
+          select: {
+            package: {
+              select: {
+                id: true,
+                name: true,
+                type: true,
+              },
+            },
+          },
+        },
       },
     });
+
+    const companies = companiesRaw.map((c) => ({
+      ...c,
+      currentSubscription: c.subscriptions[0] ?? null,
+      subscriptions: undefined,
+    }));
+
     return new NextResponse(
       JSON.stringify({ message: "Company fetched", companies })
     );
