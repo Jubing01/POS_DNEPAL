@@ -7,15 +7,15 @@ import { useGetCompanies } from "@/hooks/useCompany";
 import { useGetUsers } from "@/hooks/useUser";
 
 const CompanyPage = () => {
-  const [addCompanyPopup, setAddCompanyPopup] = useState(false);
-
+  const [addCompanyPopup, setAddCompanyPopup] = useState(false); //controls popup (falsse-hidden: true-show)
+  //MOST IMP
   const {
     data: companyData,
     isLoading: isCompanyDataLoading,
     isError: isCompanyDataError,
-  } = useGetCompanies();
+  } = useGetCompanies();  //calls backend
 
-  if (isCompanyDataLoading) {
+  if (isCompanyDataLoading) { //Prevents rendering before data arrives
     return <>is Loading</>;
   }
 
@@ -25,14 +25,14 @@ const CompanyPage = () => {
       <div className="flex justify-between px-12">
         <h1 className="text-3xl font-bold">Company Page</h1>
         <button
-          onClick={() => setAddCompanyPopup(!addCompanyPopup)}
+          onClick={() => setAddCompanyPopup(!addCompanyPopup)} //triggers popup
           className="cursor-pointer bg-green-500 px-2 rounded-xl"
         >
           + Add Company
         </button>
       </div>
       {addCompanyPopup && (
-        <AddCompanyPopup setAddCompanyPopup={setAddCompanyPopup} />
+        <AddCompanyPopup setAddCompanyPopup={setAddCompanyPopup} /> //popup exists ONLY when addCompanyPopup === true
       )}
       <div className="mt-8 mx-12 border rounded-xl border-gray-200">
         <table className="min-w-full max-w-full rounded-xl overflow-hidden">
