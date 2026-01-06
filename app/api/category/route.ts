@@ -1,63 +1,48 @@
 //@ts-nocheck
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { NextResponse } from "next/server";
+
+export async function POST(request: NextRequest) {
+	try {
+		const reqBody = await request.json();
+
+		const newCategory = await prisma.category.create({
+			data: {
+				category: reqBody.category,
+				categorySlug: reqBody.categorySlug,
+				status: reqBody.status,
+			},
+		});
+
+		return NextResponse.json(
+			{
+				message: "Category created successfully",
+				data: newCategory,
+			},
+			{ status: 201 }
+		);
+	} catch (error) {
+		console.error("Category creation error:", error);
+		return NextResponse.json(
+			{ message: "Error creating category", error: error.message },
+			{ status: 500 }
+		);
+	}
+}
 
 export async function GET() {
 	try {
-        //you can write logic for if company = this , then only fetch it's category
-		const categories = await prisma.company.findMany({
-			select: {
-				categories: {
-					select: {
-						name: true,
-                        createdAt: true,
-					},
-				},
-			},
-		});
-		return NextResponse.json({
-			success: true,
-			categories,
-		});
-	} catch (error) {
-		console.log(error);
-		return NextResponse.json({
-			success: false,
-			error: error,
-		});
-	}
-}
-export async function POST(request) {
-	try {
-		const body = await request.json();
-		const newCategory = await prisma.company.update({
-			where: {
-				id: parseInt(body.company),
-			},
-			data: {
-				categories: {
-					connectOrCreate: {
-						where: {
-							name: body.name,
-						},
-						create: {
-							name: body.name,
-						},
-					},
-				},
-			},
-		});
-		console.log(newCategory);
+		const categories = await prisma.category.findMany();
 
 		return NextResponse.json({
-			success: true,
-			newCategory,
+			message: "Categories fetched",
+			data: categories,
 		});
 	} catch (error) {
-		console.log(error);
-
-		return NextResponse.json({
-			success: false,
-		});
+		console.error(error);
+		return NextResponse.json(
+			{ message: "Error fetching categories", error: error },
+			{ status: 500 }
+		);
 	}
 }
