@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useGetSubscription } from "@/hooks/useSubscription";
+import { useGetSubscription } from "@/lib/hooks/useSubscription";
 
 const getTimeLeft = (endDate, now) => {
   const diff = new Date(endDate) - now;

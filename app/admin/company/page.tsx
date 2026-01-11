@@ -3,8 +3,8 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import AddCompanyPopup from "./addCompanyPopup";
-import { useDeleteCompany, useGetCompanies } from "@/hooks/useCompany";
-import { useGetUsers } from "@/hooks/useUser";
+import { useDeleteCompany, useGetCompanies } from "@/lib/hooks/useCompany";
+import { useGetUsers } from "@/lib/hooks/useUser";
 import {
   Table,
   TableBody,

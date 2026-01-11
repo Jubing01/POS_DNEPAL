@@ -3,7 +3,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import AddPackagePopup from "./addPackagePopup";
-import { useDeletePackage, useGetPackages } from "@/hooks/usePackage";
+import { useDeletePackage, useGetPackages } from "@/lib/hooks/usePackage";
 import EditPackagePopup from "./editPackagePopup";
 
 const PackagePage = () => {

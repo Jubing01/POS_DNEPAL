@@ -12,7 +12,7 @@ export default function ProtectedRoutes({ children }) {
       const response = await axios
         .get("/api/protected")
         .then((result) => result.data.userInfo);
-      console.log(response);
+      console.log("response", response);
       setUser(response);
     } catch {
       return new Response("Unauthorized", { status: 401 });

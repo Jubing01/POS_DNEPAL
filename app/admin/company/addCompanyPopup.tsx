@@ -1,7 +1,7 @@
 //@ts-nocheck
 "use client";
-import { useAddCompany, useUpdateCompany } from "@/hooks/useCompany";
-import { useGetPackages } from "@/hooks/usePackage";
+import { useAddCompany, useUpdateCompany } from "@/lib/hooks/useCompany";
+import { useGetPackages } from "@/lib/hooks/usePackage";
 import axios from "axios";
 import { useEffect, useState } from "react";
 

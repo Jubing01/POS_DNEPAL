@@ -1,6 +1,6 @@
 //@ts-nocheck
 "use client";
-import { useGetCurrentUser } from "@/hooks/useLogin";
+import { useGetCurrentUser } from "@/lib/hooks/useLogin";
 
 const AdminPage = () => {
   const { data: currentUser, isLoading, isError } = useGetCurrentUser();

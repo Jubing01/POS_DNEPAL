@@ -5,7 +5,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import Link from "next/link";
 import App from "next/app";
 import ProtectedRoutes from "@/components/ProtectedRoutes";
-import { useLogout } from "@/hooks/useLogin";
+import { useLogout } from "@/lib/hooks/useLogin";
 
 const AdminLayout = ({ children }) => {
   const logoutMutation = useLogout();

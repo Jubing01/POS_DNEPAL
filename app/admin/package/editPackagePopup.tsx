@@ -1,6 +1,6 @@
 //@ts-nocheck
 "use client";
-import { useUpdatePackage } from "@/hooks/usePackage";
+import { useUpdatePackage } from "@/lib/hooks/usePackage";
 import axios from "axios";
 import { useState } from "react";
 
