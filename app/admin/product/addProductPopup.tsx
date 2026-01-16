@@ -28,6 +28,7 @@ const AddProductPopup = ({ setAddProductPopup }) => {
 
 	const handleProductSubmit = async (event) => {
 		event.preventDefault();
+		console.log(productData);
 		addProductMutation.mutate(productData, {
 			onSuccess: () => {
 				setAddProductPopup(false);
@@ -57,7 +58,7 @@ const AddProductPopup = ({ setAddProductPopup }) => {
 					<div className="mb-2">Product Name</div>
 					<input
 						type="text"
-						name="productName"
+						name="name"
 						placeholder="Enter Product Name"
 						className="border p-2 rounded w-96 mb-4"
 						onChange={addDataToProductData}

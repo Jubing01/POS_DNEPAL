@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma";
 export async function POST(request: NextRequest) {
 	try {
 		const reqBody = await request.json();
+		console.log("reqBody", reqBody);
 
 		const newProduct = await prisma.product.create({
 			data: {
@@ -15,15 +16,15 @@ export async function POST(request: NextRequest) {
 				price: parseFloat(reqBody.price),
 				unit: reqBody.unit,
 				quantity: parseInt(reqBody.quantity),
-				// companyId: parseInt(reqBody.companyId),
-				// createdBy: reqBody.createdBy,
+				
+				companyId: parseInt(reqBody.companyId),
+				createdBy: reqBody.createdBy,
 			},
 		});
 
 		return NextResponse.json(
 			{
 				message: "Product created successfully",
-				data: newProduct,
 			},
 			{ status: 201 }
 		);
