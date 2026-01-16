@@ -4,7 +4,7 @@ import { withErrorHandler } from "@/lib/errorHandler";
 import { verifyAuth } from "@/lib/auth";
 import slugify from "slugify";
 
-type Params = { params: Promise<{ id: string }> };
+import { Params } from "@/lib/clientSchema/crud/schema";
 
 export const POST = withErrorHandler<Params>(async function (
   request: NextRequest,

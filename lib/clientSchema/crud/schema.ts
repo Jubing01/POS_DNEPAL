@@ -18,7 +18,7 @@ export type CrudConfig<TForm extends FieldValues, TRow> = {
     update: ZodType<TForm, any, any>;
     row: ZodType<TForm, any, any>;
   };
-  defaultValues: DefaultValues<TForm>;
+  defaultValues: DefaultValues<TRow>;
   FormView: React.ComponentType<{
     form: UseFormReturn<TForm>;
   }>;
@@ -39,3 +39,5 @@ export type CrudConfig<TForm extends FieldValues, TRow> = {
     useDelete: () => UseMutationResult<any, Error, {id: string}, unknown>;
   };
 };
+
+export type Params = { params: Promise<{ id: string }> };

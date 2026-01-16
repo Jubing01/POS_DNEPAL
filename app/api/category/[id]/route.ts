@@ -3,7 +3,7 @@ import { withErrorHandler } from "@/lib/errorHandler";
 import prisma from "@/lib/prisma";
 import slugify from "slugify";
 
-type Params = { params: Promise<{ id: string }> };
+import { Params } from "@/lib/clientSchema/crud/schema";
 
 export const PATCH = withErrorHandler<Params>(async function (
   request: NextRequest,
