@@ -7,4 +7,10 @@ export const getCategoriesColumns = (): ColumnDef<CategoryType>[] => [
     header: "Category Name",
     cell: ({ row }) => row.getValue("name"),
   },
+  {
+    accessorKey: "slug",
+    header: "Category Slug",
+    cell: ({ row }) => row.getValue("slug"),
+  },
+  
 ];

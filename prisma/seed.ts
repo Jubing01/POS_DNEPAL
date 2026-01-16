@@ -1,36 +1,27 @@
-import prisma from "@/lib/prisma"
+import { PrismaClient, UserRole } from "@/app/generated/prisma/client";
+import bcrypt from "bcryptjs";
+
+const prisma = new PrismaClient();
 
 async function main() {
-  // 1. Create default super admin user
-  const superAdmin = await prisma.user.create({
-    data: {
-      email: 'admin@company.com',
-      password: 'hashed_password_here', // hash this properly
-      name: 'Super Admin',
-      role: 'SUPER_ADMIN',
-    },
-  })
+  const existing = await prisma.user.findFirst({
+    where: { role: UserRole.SUPER_ADMIN },
+  });
 
-  // 2. Create a default package
-  const defaultPackage = await prisma.package.create({
-    data: {
-      name: 'Basic Plan',
-      price: 1000,
-      interval: 'MONTHLY',
-      maxProducts: 50,
-      maxStaff: 5,
-      maxWarehouses: 1,
-      maxStockAdjust: 10,
-      enableReports: true,
-      enableAdvanced: false,
-    },
-  })
+  if (existing) return;
 
-  console.log('Seed data created!')
+  await prisma.user.create({
+    data: {
+      email: "superadmin@gmail.com",
+      password: await bcrypt.hash("Superadmin", 10),
+      role: UserRole.SUPER_ADMIN,
+      isActive: true,
+    },
+  });
+
+  console.log("✅ Super admin seeded");
 }
 
 main()
-  .catch((e) => console.error(e))
-  .finally(async () => {
-    await prisma.$disconnect()
-  })
+  .catch(console.error)
+  .finally(() => prisma.$disconnect());

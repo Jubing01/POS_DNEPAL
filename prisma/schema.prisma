@@ -135,8 +135,9 @@ model Company {
   notifications Notification[]
   auditLogs     AuditLog[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  companyCategories CompanyCategory[]
 }
 
 /**
@@ -237,17 +238,29 @@ model StockLog {
  */
 
 model Category {
-  id        String  @id @default(uuid())
-  companyId String
-  name      String
-  imageUrl  String?
-  parentId  String?
+  id   String @id @default(uuid())
+  name String
+  slug String @unique
+
+  createdBy UserRole
 
   products Product[]
 
-  company  Company    @relation(fields: [companyId], references: [id])
-  parent   Category?  @relation("SubCategory", fields: [parentId], references: [id])
-  children Category[] @relation("SubCategory")
+  companies CompanyCategory[]
+  company   Company?          @relation(fields: [companyId], references: [id])
+  companyId String?
+}
+
+model CompanyCategory {
+  id String @id @default(uuid())
+
+  companyId  String
+  categoryId String
+
+  company  Company  @relation(fields: [companyId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
+
+  @@unique([companyId, categoryId])
 }
 
 model Brand {
