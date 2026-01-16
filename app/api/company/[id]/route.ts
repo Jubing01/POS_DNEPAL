@@ -43,7 +43,7 @@ export async function PATCH(request, { params }) {
         users: {
           update: {
             where: {
-              role: "admin",
+              role: "COMPANY_ADMIN",
             },
             data: {
               email: body.email,

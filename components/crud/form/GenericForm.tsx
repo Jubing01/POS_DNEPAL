@@ -6,17 +6,17 @@ import { FieldValues } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 
-const GenericForm = <T extends FieldValues>({
+const GenericForm = <TForm extends FieldValues, TRow>({
   config,
   editData,
   isEditMode,
 }: {
-  config: CrudConfig<T>;
-  editData: T | null;
+  config: CrudConfig<TForm, TRow>;
+  editData: TForm | null;
   isEditMode: boolean;
 }) => {
-  const form = useForm<T>({
-    resolver: zodResolver(config.schema),
+  const form = useForm<TForm>({
+    resolver: zodResolver(config.schema.create),
     defaultValues: config.defaultValues,
   });
   const updateMutation = config.hooks.useUpdate();
@@ -29,7 +29,7 @@ const GenericForm = <T extends FieldValues>({
     }
   }, [editData]);
 
-  const onSubmit = (data: T) => {
+  const onSubmit = (data: TForm) => {
     console.log(`Submitted ${config.entityName}:`, data);
     if (isEditMode) {
       updateMutation.mutate({ id: data?.id, data });

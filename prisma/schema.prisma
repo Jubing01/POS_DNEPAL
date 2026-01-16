@@ -14,65 +14,288 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/**
+ * ===========================
+ * ENUMS
+ * ===========================
+ */
+
+enum UserRole {
+  SUPER_ADMIN
+  COMPANY_ADMIN
+  STAFF
+}
+
+enum SubscriptionInterval {
+  MONTHLY
+  YEARLY
+}
+
+enum StockActionType {
+  STOCK_IN
+  STOCK_OUT
+  ADJUSTMENT
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  STOCK_CHANGE
+  SUBSCRIPTION_CHANGE
+}
+
+enum NotificationType {
+  LOW_STOCK
+  OUT_OF_STOCK
+  EXPIRY
+  STOCK_ACTIVITY
+  STAFF_ACTIVITY
+  WARNING
+}
+
+/**
+ * ===========================
+ * AUTH & USERS
+ * ===========================
+ */
+
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  id       String   @id @default(uuid())
+  email    String   @unique
   password String
-  role  String
-  companyId Int?
-  company    Company?  @relation(fields: [companyId], references: [id])
+  name     String?
+  role     UserRole
+  isActive Boolean  @default(true)
+
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id])
+
+  permissions UserPermission[]
+  loginLogs   LoginLog[]
+  auditLogs   AuditLog[]
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  stockLogs StockLog[]
 }
 
-model Package {
-  id          Int   @id @default(autoincrement())
-  name        String
-  type        String
-  maxCustomer Int
-  maxProduct  Int
-  price       Float
-
-  subscriptions Subscription[]
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+model LoginLog {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
 }
+
+model Permission {
+  id    String @id @default(uuid())
+  key   String @unique
+  label String
+
+  userPermissions UserPermission[]
+}
+
+model UserPermission {
+  id           String @id @default(uuid())
+  userId       String
+  permissionId String
+
+  user       User       @relation(fields: [userId], references: [id])
+  permission Permission @relation(fields: [permissionId], references: [id])
+}
+
+/**
+ * ===========================
+ * COMPANY & SETTINGS
+ * ===========================
+ */
 
 model Company {
-  id        Int   @id @default(autoincrement())
-  name      String
-  address   String
-  phone     String
-  pan       String
+  id      String  @id @default(uuid())
+  name    String
+  address String
+  phone   String
+  pan     String
+  logoUrl String?
 
-  users User[]
+  isActive Boolean @default(true)
+
+  currency String @default("NPR")
+  rounding Int    @default(2)
+
+  users         User[]
+  products      Product[]
+  categories    Category[]
+  brands        Brand[]
   subscriptions Subscription[]
+  notifications Notification[]
+  auditLogs     AuditLog[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
 
+/**
+ * ===========================
+ * SUBSCRIPTIONS & PACKAGES
+ * ===========================
+ */
+
+model Package {
+  id       String               @id @default(uuid())
+  name     String
+  price    Float
+  interval SubscriptionInterval
+
+  maxProducts    Int
+  maxStaff       Int
+  maxWarehouses  Int?
+  maxStockAdjust Int?
+
+  enableReports  Boolean @default(true)
+  enableAdvanced Boolean @default(false)
+
+  subscriptions Subscription[]
+
+  createdAt DateTime @default(now())
 }
 
 model Subscription {
-  id         Int   @id @default(autoincrement())
+  id        String @id @default(uuid())
+  companyId String
+  packageId String
 
-  companyId  Int
-  packageId  Int
+  startDate DateTime
+  endDate   DateTime
+  isActive  Boolean  @default(true)
 
-  startDate  DateTime
-  endDate    DateTime
-  isActive   Boolean  @default(true)
+  company Company @relation(fields: [companyId], references: [id])
+  package Package @relation(fields: [packageId], references: [id])
 
-  company    Company  @relation(fields: [companyId], references: [id])
-  package    Package  @relation(fields: [packageId], references: [id])
-
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt DateTime @default(now())
 }
 
-model Category {
-  id  String @id @default(cuid())
-  name  String
+/**
+ * ===========================
+ * INVENTORY CORE
+ * ===========================
+ */
 
-  companyId 
+model Product {
+  id        String @id @default(uuid())
+  companyId String
+
+  name         String
+  sku          String    @unique
+  costPrice    Float
+  sellingPrice Float?
+  unit         String
+  batchId      String?
+  minStock     Int
+  openingStock Int
+  expiryDate   DateTime?
+  status       Boolean   @default(true)
+
+  categoryId String?
+  brandId    String?
+
+  company  Company   @relation(fields: [companyId], references: [id])
+  category Category? @relation(fields: [categoryId], references: [id])
+  brand    Brand?    @relation(fields: [brandId], references: [id])
+
+  stockLogs StockLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model StockLog {
+  id        String @id @default(uuid())
+  productId String
+  userId    String
+
+  quantity Int
+  action   StockActionType
+  reason   String?
+
+  product Product @relation(fields: [productId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  createdAt  DateTime  @default(now())
+  auditLog   AuditLog? @relation(fields: [auditLogId], references: [id])
+  auditLogId String?
+}
+
+/**
+ * ===========================
+ * CATEGORY & BRAND
+ * ===========================
+ */
+
+model Category {
+  id        String  @id @default(uuid())
+  companyId String
+  name      String
+  imageUrl  String?
+  parentId  String?
+
+  products Product[]
+
+  company  Company    @relation(fields: [companyId], references: [id])
+  parent   Category?  @relation("SubCategory", fields: [parentId], references: [id])
+  children Category[] @relation("SubCategory")
+}
+
+model Brand {
+  id        String @id @default(uuid())
+  companyId String
+  name      String
+
+  company  Company   @relation(fields: [companyId], references: [id])
+  products Product[]
+}
+
+/**
+ * ===========================
+ * NOTIFICATIONS
+ * ===========================
+ */
+
+model Notification {
+  id        String           @id @default(uuid())
+  companyId String
+  type      NotificationType
+  message   String
+  isRead    Boolean          @default(false)
+
+  company Company @relation(fields: [companyId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+/**
+ * ===========================
+ * AUDIT LOGS
+ * ===========================
+ */
+
+model AuditLog {
+  id          String      @id @default(uuid())
+  companyId   String?
+  userId      String?
+  action      AuditAction
+  entity      String
+  entityId    String?
+  description String?
+
+  stockLogs StockLog[]
+
+  company Company? @relation(fields: [companyId], references: [id])
+  user    User?    @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
 }

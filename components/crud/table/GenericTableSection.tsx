@@ -2,20 +2,19 @@ import { CrudConfig } from "@/lib/clientSchema/crud/schema";
 import { FieldValues } from "react-hook-form";
 import GenericTableView from "./GenericTableView";
 import GenericPaginationView from "./GenericPaginationView";
-import React, { useCallback } from "react";
 
-export function GenericTableSection<T extends FieldValues>({
+export function GenericTableSection<TForm extends FieldValues, TRow>({
   config,
   setEditData,
 }: {
-  config: CrudConfig<T>;
-  setEditData: (data: T | null) => void;
+  config: CrudConfig<TForm, TRow>;
+  setEditData: (data: TForm | null) => void;
 }) {
   const table = config.hooks.useTable({
-    onEdit: (item: T) => {
+    onEdit: (item: TForm) => {
       setEditData(item);
     },
-    onDelete: (data: T) => {
+    onDelete: (data: TForm) => {
       console.log(data);
     },
   });

@@ -9,25 +9,29 @@ export type UpdateInput<T> = {
   data: Partial<T>;
 };
 
-export type CrudConfig<T extends FieldValues> = {
+export type CrudConfig<TForm extends FieldValues, TRow> = {
   entityName: string;
   entityNamePlural: string;
   description: string;
-  schema: ZodType<T, any, any>;
-  defaultValues: DefaultValues<T>;
+  schema: {
+    create: ZodType<TForm, any, any>;
+    update: ZodType<TForm, any, any>;
+    row: ZodType<TForm, any, any>;
+  };
+  defaultValues: DefaultValues<TForm>;
   FormView: React.ComponentType<{
-    form: UseFormReturn<T>;
+    form: UseFormReturn<TForm>;
   }>;
   formId: string;
   hooks: {
     useTable: (args: {
-      onEdit: (item: T) => void;
-      onDelete: (item: T) => void;
-    }) => Table<T>;
+      onEdit: (item: TForm) => void;
+      onDelete: (item: TForm) => void;
+    }) => Table<TForm>;
     useUpdate: () => UseMutationResult<
       any,
       Error, // error
-      { id: string; data: T },
+      { id: string; data: TForm },
       unknown
     >;
   };

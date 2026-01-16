@@ -14,14 +14,14 @@ import { CrudConfig } from "@/lib/clientSchema/crud/schema";
 import { FieldValues } from "react-hook-form";
 import React, { useState } from "react";
 
-const FormDialog = <T extends FieldValues>({
+const FormDialog = <TForm extends FieldValues, TRow>({
   config,
   editData,
   setEditData,
 }: {
-  config: CrudConfig<T>;
-  editData: T | null;
-  setEditData: (data: T | null) => void;
+  config: CrudConfig<TForm, TRow>;
+  editData: TForm | null;
+  setEditData: (data: TForm | null) => void;
 }) => {
   const [openAdd, setOpenAdd] = useState<boolean>(false);
   const isEditMode = editData !== null;

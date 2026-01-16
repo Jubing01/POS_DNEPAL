@@ -1,11 +1,7 @@
-//@ts-nocheck
+"use client";
+import GenericCrudPage from "@/components/crud/GenericCrudPage";
+import { productConfig } from "@/lib/config/productConfig";
 
- const Products = () => {
-    return (
-        <div>
-            Product Page
-        </div>
-    )
+export default function ProductPage() {
+  return <GenericCrudPage config={productConfig} />;
 }
-
-export default Products;

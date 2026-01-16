@@ -2,14 +2,14 @@ import { CrudConfig } from "@/lib/clientSchema/crud/schema";
 import FormDialog from "@/components/crud/form/FormDialog";
 import { FieldValues } from "react-hook-form";
 import { GenericTableSection } from "@/components/crud/table/GenericTableSection";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 
-const GenericCrudPage = <T extends FieldValues>({
+const GenericCrudPage = <TForm extends FieldValues, TRow>({
   config,
 }: {
-  config: CrudConfig<T>;
+  config: CrudConfig<TForm, TRow>;
 }) => {
-  const [editData, setEditData] = useState<T | null>(null);
+  const [editData, setEditData] = useState<TForm | null>(null);
   return (
     <div className="py-8 px-12 flex flex-col gap-12">
       <div className="flex justify-between">

@@ -3,16 +3,20 @@ import { categorySchema, CategoryType } from "../clientSchema/category/schema";
 import { CrudConfig } from "../clientSchema/crud/schema";
 import { useCategoriesTable, useUpdateCategory } from "../hooks/useCategory";
 
-export const categoriesConfig: CrudConfig<CategoryType> = {
+export const categoriesConfig: CrudConfig<CategoryType, CategoryType> = {
   entityName: "Category",
   entityNamePlural: "Categories",
   description: "Add new Categories to the system",
-  schema: categorySchema,
+  schema: {
+    create: categorySchema,
+    update: categorySchema,
+    row: categorySchema,
+  },
   defaultValues: {
     name: "",
   },
   FormView: CategoriesFormView,
-  formId: "form-rhf-countries",
+  formId: "form-rhf-categories",
   hooks: {
     useTable: useCategoriesTable,
     useUpdate: useUpdateCategory,

@@ -1,5 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import {
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+  ColumnDef,
+} from "@tanstack/react-table";
+import { getColumnsWithActions } from "../clientSchema/crud/columns";
+import { useMemo } from "react";
 
 export function createCrudHooks<T extends { id?: string }>({
   endpoint,
@@ -74,5 +82,44 @@ export function createCrudHooks<T extends { id?: string }>({
     useCreate,
     useUpdate,
     useDelete,
+  };
+}
+
+export function createCrudTableHook<TRow>({
+  useGetAll,
+  getColumns,
+  dataKey,
+}: {
+  useGetAll: () => { data: any; isLoading: boolean; error: any };
+  getColumns: () => ColumnDef<TRow>[];
+  dataKey?: string;
+}) {
+  return function useCrudTable({
+    onEdit,
+    onDelete,
+  }: {
+    onEdit: (item: TRow) => void;
+    onDelete: (item: TRow) => void;
+  }) {
+    const { data: response, isLoading, error } = useGetAll();
+
+    // Extract data using dataKey if provided, otherwise use response directly
+    const data = dataKey && response ? response[dataKey] : response || [];
+
+    const columns = useMemo(
+      () =>
+        getColumnsWithActions(getColumns(), {
+          onEdit,
+          onDelete,
+        }),
+      [onEdit, onDelete]
+    );
+
+    return useReactTable({
+      data,
+      columns,
+      getCoreRowModel: getCoreRowModel(),
+      getPaginationRowModel: getPaginationRowModel(),
+    });
   };
 }

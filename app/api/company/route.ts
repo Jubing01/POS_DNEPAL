@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
             name: reqBody.name,
             email: reqBody.email,
             password: passwordHash,
-            role: "admin",
+            role: "COMPANY_ADMIN",
           },
         },
         subscriptions: {

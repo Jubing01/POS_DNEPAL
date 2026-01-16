@@ -1,64 +1,21 @@
-import {
-  addCompany,
-  deleteCompany,
-  getCompanies,
-  updateCompany,
-} from "@/apiClient/companyApi";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-toastify";
+import { getCompanyColumns } from "../clientSchema/company/columns";
+import { CompanyTypeForm } from "../clientSchema/company/schema";
+import { createCrudHooks, createCrudTableHook } from "./useCrudHooks";
 
-export function useGetCompanies() {
-  return useQuery({
-    queryKey: ["companies"],
-    queryFn: getCompanies,
-  });
-}
+const companyCrud = createCrudHooks<CompanyTypeForm>({
+  endpoint: "company",
+  queryKey: "companies",
+});
 
-export function useAddCompany() {
-  const queryClient = useQueryClient();
+export const {
+  useGetAll: useGetAllCompanies,
+  useCreate: useCreateCompany,
+  useUpdate: useUpdateCompany,
+  useDelete: useDeleteCompany,
+} = companyCrud;
 
-  return useMutation({
-    mutationFn: addCompany,
-    onSuccess: (response) => {
-      queryClient.invalidateQueries({ queryKey: ["companies"] });
-      toast.success(response?.data?.message || "Created Successfully");
-    },
-    onError: (error) => {
-      toast.error("Error while creating...");
-      console.log(error);
-    },
-  });
-}
-
-export function useDeleteCompany() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: deleteCompany,
-    onSuccess: (response) => {
-      console.log(response);
-      queryClient.invalidateQueries({ queryKey: ["companies"] });
-      toast.success("Successfully Deleted Company");
-    },
-    onError: (error) => {
-      console.log(error);
-      toast.error("Error Deleting Company");
-    },
-  });
-}
-
-export function useUpdateCompany() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: updateCompany,
-    onSuccess: (response) => {
-      console.log(response);
-      queryClient.invalidateQueries({ queryKey: ["companies"] });
-      toast.success("Successfully updated company");
-    },
-    onError: (error) => {
-      console.log(error);
-      toast.success("Failed to update company");
-    },
-  });
-}
+export const useCompanyTable = createCrudTableHook<CompanyTypeForm>({
+  useGetAll: useGetAllCompanies,
+  getColumns: getCompanyColumns,
+  dataKey: "companies",
+});
