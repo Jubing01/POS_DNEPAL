@@ -1,31 +1,47 @@
+import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { withErrorHandler } from "@/lib/errorHandler";
+import { verifyAuth } from "@/lib/auth";
+import slugify from "slugify";
 
-export async function GET() {
-  try {
-    const allCategories = [
-      { id: "1", name: "Mobile" },
-      { id: "2", name: "Laptop" },
-      { id: "3", name: "Desktop" },
-    ];
-    return NextResponse.json({
-      success: true,
-      categories: allCategories,
-    });
-  } catch (error) {
-    console.log(error);
-    return NextResponse.json(
-      {
-        success: false,
-        error,
-      },
-      { status: 500 }
-    );
-  }
-}
+type Params = { params: Promise<{ id: string }> };
 
-export async function POST(request: NextRequest) {
-  try {
-  } catch (error) {
-    console.log(error);
-  }
-}
+export const POST = withErrorHandler<Params>(async function (
+  request: NextRequest,
+  { params }: Params
+) {
+  const body = await request.json();
+
+  const slug = slugify(body.name, {
+    lower: true,
+  });
+
+  const user = await verifyAuth();
+
+  const createdUser = user.role;
+
+  const createdCategory = await prisma.category.create({
+    data: {
+      name: body.name,
+      createdBy: createdUser,
+      slug: slug,
+    },
+  });
+
+  return NextResponse.json({
+    success: true,
+    updatedCategories: createdCategory,
+  });
+});
+
+export const GET = withErrorHandler<Params>(async function (
+  request: NextRequest,
+  { params }: Params
+) {
+  const allCategories = await prisma.category.findMany();
+
+  return NextResponse.json({
+    success: true,
+    categories: allCategories,
+  });
+});

@@ -30,7 +30,6 @@ export async function PATCH(request, { params }) {
   try {
     const body = await request.json();
     const { id } = await params;
-    console.log(id, body);
     const updatedCompany = await prisma.company.update({
       where: {
         id,

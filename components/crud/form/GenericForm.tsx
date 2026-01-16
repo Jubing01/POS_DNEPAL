@@ -20,6 +20,7 @@ const GenericForm = <TForm extends FieldValues, TRow>({
     defaultValues: config.defaultValues,
   });
   const updateMutation = config.hooks.useUpdate();
+  const createMutation = config.hooks.useCreate();
 
   useEffect(() => {
     if (editData) {
@@ -33,6 +34,8 @@ const GenericForm = <TForm extends FieldValues, TRow>({
     console.log(`Submitted ${config.entityName}:`, data);
     if (isEditMode) {
       updateMutation.mutate({ id: data?.id, data });
+    } else {
+      createMutation.mutate({ body: data });
     }
   };
 
