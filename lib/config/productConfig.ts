@@ -2,8 +2,8 @@ import { CrudConfig } from "../clientSchema/crud/schema";
 import ProductFormView from "@/components/product/ProductFormView";
 import { useCreateProduct, useDeleteProduct, useGetAllProducts, useProductTable, useUpdateProduct } from "../hooks/useProduct";
 import {
-  productFormSchema,
-  ProductFormType,
+	productFormSchema,
+	ProductFormType,
 } from "../clientSchema/product/schema";
 
 export const productConfig: CrudConfig<ProductFormType, ProductFormType> =
