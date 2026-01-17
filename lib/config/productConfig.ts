@@ -6,6 +6,27 @@ import {
 	ProductFormType,
 } from "../clientSchema/product/schema";
 
+<<<<<<< HEAD
+export const productConfig: CrudConfig<ProductFormType, ProductFormType> = {
+	entityName: "Product",
+	entityNamePlural: "Products",
+	description: "Add new Product to the system",
+	schema: {
+		create: productFormSchema,
+		update: productFormSchema,
+		row: productFormSchema,
+	},
+	defaultValues: {
+		name: "",
+	},
+	FormView: ProductFormView,
+	formId: "form-rhf-product",
+	hooks: {
+		useTable: useProductTable,
+		useUpdate: useUpdateProduct,
+	},
+};
+=======
 export const productConfig: CrudConfig<ProductFormType, ProductFormType> =
   {
     entityName: "Product",
@@ -29,3 +50,4 @@ export const productConfig: CrudConfig<ProductFormType, ProductFormType> =
       useDelete: useDeleteProduct
     },
   };
+>>>>>>> main
