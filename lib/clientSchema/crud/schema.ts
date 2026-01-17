@@ -2,7 +2,7 @@ import { DefaultValues, FieldValues } from "react-hook-form";
 import { ZodType } from "zod";
 import { UseFormReturn } from "react-hook-form";
 import { Table } from "@tanstack/react-table";
-import { UseMutationResult } from "@tanstack/react-query";
+import { UseMutationResult, UseQueryResult } from "@tanstack/react-query";
 
 export type UpdateInput<T> = {
   id: string;
@@ -34,5 +34,8 @@ export type CrudConfig<TForm extends FieldValues, TRow> = {
       { id: string; data: TForm },
       unknown
     >;
+    useGetAll: () => UseQueryResult<any, Error>;
+    useCreate: () => UseMutationResult<any, Error, {body: TForm}, unknown>;
+    useDelete: () => UseMutationResult<any, Error, {id: string}, unknown>;
   };
 };

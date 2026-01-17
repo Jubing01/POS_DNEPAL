@@ -1,7 +1,13 @@
 import CategoriesFormView from "@/components/categories/CategoriesFormView";
 import { categorySchema, CategoryType } from "../clientSchema/category/schema";
 import { CrudConfig } from "../clientSchema/crud/schema";
-import { useCategoriesTable, useUpdateCategory } from "../hooks/useCategory";
+import {
+  useCategoriesTable,
+  useCreateCategory,
+  useDeleteCategory,
+  useGetAllCategories,
+  useUpdateCategory,
+} from "../hooks/useCategory";
 
 export const categoriesConfig: CrudConfig<CategoryType, CategoryType> = {
   entityName: "Category",
@@ -20,5 +26,8 @@ export const categoriesConfig: CrudConfig<CategoryType, CategoryType> = {
   hooks: {
     useTable: useCategoriesTable,
     useUpdate: useUpdateCategory,
+    useCreate: useCreateCategory,
+    useDelete: useDeleteCategory,
+    useGetAll: useGetAllCategories,
   },
 };

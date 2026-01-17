@@ -9,7 +9,7 @@ import {
 import { getColumnsWithActions } from "../clientSchema/crud/columns";
 import { useMemo } from "react";
 
-export function createCrudHooks<T extends { id?: string }>({
+export function createCrudHooks<TForm extends { id?: string }>({
   endpoint,
   queryKey,
 }: {
@@ -29,9 +29,9 @@ export function createCrudHooks<T extends { id?: string }>({
   };
   const useCreate = () => {
     const queryClient = useQueryClient();
-    return useMutation({
-      mutationFn: async (data) => {
-        const response = await axios.post(baseUrl, data);
+    return useMutation<any, Error, { body: TForm }>({
+      mutationFn: async ({ body }: { body: TForm }) => {
+        const response = await axios.post(baseUrl, body);
         return response.data;
       },
       onSuccess: (response) => {
@@ -46,7 +46,7 @@ export function createCrudHooks<T extends { id?: string }>({
   const useUpdate = () => {
     const queryClient = useQueryClient();
     return useMutation({
-      mutationFn: async ({ id, data }: { id: string; data: T }) => {
+      mutationFn: async ({ id, data }: { id: string; data: TForm }) => {
         const response = await axios.patch(`${baseUrl}/${id}`, data);
         return response.data;
       },
@@ -62,8 +62,8 @@ export function createCrudHooks<T extends { id?: string }>({
 
   const useDelete = () => {
     const queryClient = useQueryClient();
-    return useMutation({
-      mutationFn: async (id) => {
+    return useMutation<any, Error, { id: string }>({
+      mutationFn: async ({ id }: { id: string }) => {
         const response = await axios.delete(`${baseUrl}/${id}`);
         return response.data;
       },

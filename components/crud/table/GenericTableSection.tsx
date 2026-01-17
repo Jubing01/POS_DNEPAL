@@ -10,12 +10,13 @@ export function GenericTableSection<TForm extends FieldValues, TRow>({
   config: CrudConfig<TForm, TRow>;
   setEditData: (data: TForm | null) => void;
 }) {
+  const deleteMutation = config.hooks.useDelete();
   const table = config.hooks.useTable({
     onEdit: (item: TForm) => {
       setEditData(item);
     },
     onDelete: (data: TForm) => {
-      console.log(data);
+      deleteMutation.mutate({ id: data.id });
     },
   });
   return (

@@ -36,16 +36,18 @@ const ProductFormView = ({
 				)}
 			/>
 			<Controller
-				name="price"
+				name="costPrice"
 				control={form.control}
 				render={({ field, fieldState }) => (
 					<Field data-invalid={fieldState.invalid}>
-						<FieldLabel htmlFor="form-rhf-product-price">Price</FieldLabel>
+						<FieldLabel htmlFor="form-rhf-product-costPrice">
+							Cost Price
+						</FieldLabel>
 						<Input
 							{...field}
-							id="form-rhf-product-price"
+							id="form-rhf-product-costPrice"
 							aria-invalid={fieldState.invalid}
-							placeholder="Enter Price"
+							placeholder="Enter Cost Price"
 							autoComplete="off"
 						/>
 						{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -53,16 +55,173 @@ const ProductFormView = ({
 				)}
 			/>
 			<Controller
-				name="price"
+				name="sku"
 				control={form.control}
 				render={({ field, fieldState }) => (
 					<Field data-invalid={fieldState.invalid}>
-						<FieldLabel htmlFor="form-rhf-product-price">Price</FieldLabel>
+						<FieldLabel htmlFor="form-rhf-product-sku">Price</FieldLabel>
 						<Input
 							{...field}
-							id="form-rhf-product-price"
+							id="form-rhf-product-sku"
 							aria-invalid={fieldState.invalid}
-							placeholder="Enter Price"
+							placeholder="Enter SKU"
+							autoComplete="off"
+						/>
+						{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+					</Field>
+				)}
+			/>
+			<Controller
+				name="sellingPrice"
+				control={form.control}
+				render={({ field, fieldState }) => (
+					<Field data-invalid={fieldState.invalid}>
+						<FieldLabel htmlFor="form-rhf-product-sellingPrice">
+							Selling Price
+						</FieldLabel>
+						<Input
+							{...field}
+							id="form-rhf-product-sellingPrice"
+							aria-invalid={fieldState.invalid}
+							placeholder="Enter Selling Price"
+							autoComplete="off"
+						/>
+						{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+					</Field>
+				)}
+			/>
+			<Controller
+				name="unit"
+				control={form.control}
+				render={({ field, fieldState }) => (
+					<Field data-invalid={fieldState.invalid}>
+						<FieldLabel htmlFor="form-rhf-product-unit">Unit</FieldLabel>
+						<Input
+							{...field}
+							id="form-rhf-product-unit"
+							aria-invalid={fieldState.invalid}
+							placeholder="Enter Unit"
+							autoComplete="off"
+						/>
+						{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+					</Field>
+				)}
+			/>
+			<Controller
+				name="minStock"
+				control={form.control}
+				render={({ field, fieldState }) => (
+					<Field data-invalid={fieldState.invalid}>
+						<FieldLabel htmlFor="form-rhf-product-minStock">
+							Product Name
+						</FieldLabel>
+						<Input
+							{...field}
+							id="form-rhf-product-minStock"
+							aria-invalid={fieldState.invalid}
+							placeholder="Enter MinStock"
+							autoComplete="off"
+						/>
+						{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+					</Field>
+				)}
+			/>
+			<Controller
+				name="openingStock"
+				control={form.control}
+				render={({ field, fieldState }) => (
+					<Field data-invalid={fieldState.invalid}>
+						<FieldLabel htmlFor="form-rhf-product-openingStock">
+							Opening Stock
+						</FieldLabel>
+						<Input
+							{...field}
+							id="form-rhf-product-openingStock"
+							aria-invalid={fieldState.invalid}
+							placeholder="Enter Opening Stock"
+							autoComplete="off"
+						/>
+						{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+					</Field>
+				)}
+			/>
+			<Controller
+				name="expiryDate"
+				control={form.control}
+				render={({ field, fieldState }) => (
+					<Field data-invalid={fieldState.invalid}>
+						<FieldLabel htmlFor="form-rhf-product-expiryDate">
+							Expiry Date
+						</FieldLabel>
+						<Input
+							id="form-rhf-product-expiryDate"
+							type="date"
+							value={
+								field.value
+									? new Date(field.value).toISOString().split("T")[0]
+									: ""
+							}
+							onChange={(e) =>
+								field.onChange(
+									e.target.value ? new Date(e.target.value) : undefined
+								)
+							}
+							aria-invalid={fieldState.invalid}
+						/>
+						{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+					</Field>
+				)}
+			/>
+
+			<Controller
+				name="status"
+				control={form.control}
+				render={({ field, fieldState }) => (
+					<Field data-invalid={fieldState.invalid}>
+						<FieldLabel htmlFor="form-rhf-product-status">
+							Active Status
+						</FieldLabel>
+						<Input
+							id="form-rhf-product-status"
+							type="checkbox"
+							checked={field.value}
+							onChange={(e) => field.onChange(e.target.checked)}
+							aria-invalid={fieldState.invalid}
+						/>
+						{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+					</Field>
+				)}
+			/>
+			<Controller
+				name="categoryId"
+				control={form.control}
+				render={({ field, fieldState }) => (
+					<Field data-invalid={fieldState.invalid}>
+						<FieldLabel htmlFor="form-rhf-product-categoryId">
+							Category
+						</FieldLabel>
+						<Input
+							{...field}
+							id="form-rhf-product-categoryId"
+							aria-invalid={fieldState.invalid}
+							placeholder="Enter Category ID"
+							autoComplete="off"
+						/>
+						{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+					</Field>
+				)}
+			/>
+			<Controller
+				name="brandId"
+				control={form.control}
+				render={({ field, fieldState }) => (
+					<Field data-invalid={fieldState.invalid}>
+						<FieldLabel htmlFor="form-rhf-product-brandId">Brand</FieldLabel>
+						<Input
+							{...field}
+							id="form-rhf-product-brandId"
+							aria-invalid={fieldState.invalid}
+							placeholder="Enter Brand ID"
 							autoComplete="off"
 						/>
 						{fieldState.invalid && <FieldError errors={[fieldState.error]} />}

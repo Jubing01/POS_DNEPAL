@@ -11,6 +11,7 @@ import {
 import Link from "next/link";
 
 import { Package } from "lucide-react";
+import { MdCategory } from "react-icons/md";
 
 const inventoryItems = [
   {
@@ -18,6 +19,11 @@ const inventoryItems = [
     url: "/admin/product",
     icon: Package,
   },
+  {
+    title: "Category",
+    url: "/admin/category",
+    icon: MdCategory
+  }
 ];
 
 const InventorySectionSidebar = () => {
