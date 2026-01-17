@@ -1,63 +1,21 @@
-//@ts-nocheck
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  addPackage,
-  deletePackage,
-  updatePackage,
-  getPackages,
-} from "@/apiClient/packageApi";
-import { toast } from "react-toastify";
+import { getPackageColumns } from "../clientSchema/package/columns";
+import { PackageFormType } from "../clientSchema/package/schema";
+import { createCrudHooks, createCrudTableHook } from "./useCrudHooks";
 
-export function useGetPackages() {
-  return useQuery({
-    queryKey: ["packages"],
-    queryFn: getPackages,
-  });
-}
+const packageCrud = createCrudHooks<PackageFormType>({
+  endpoint: "package",
+  queryKey: "packages",
+});
 
-export function useAddPackage() {
-  const queryClient = useQueryClient();
+export const {
+  useGetAll: useGetAllPackages,
+  useCreate: useCreatePackage,
+  useUpdate: useUpdatePackage,
+  useDelete: useDeletePackage,
+} = packageCrud;
 
-  return useMutation({
-    mutationFn: addPackage,
-    onSuccess: (response) => {
-      queryClient.invalidateQueries({ queryKey: ["packages"] });
-      toast.success(response?.data?.message || "Created Successfully");
-    },
-    onError: (error) => {
-      toast.error("Error while adding Package");
-      console.log("The error is", error);
-    },
-  });
-}
-
-export function useUpdatePackage() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: updatePackage,
-    onSuccess: (response) => {
-      queryClient.invalidateQueries({ queryKey: ["packages"] });
-      toast.success(response?.data?.message || "Update Successfull");
-    },
-    onError: (error) => {
-      toast.error("Error while updating Package");
-      console.log("The error is", error);
-    },
-  });
-}
-
-export function useDeletePackage() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: deletePackage,
-    onSuccess: (response) => {
-      queryClient.invalidateQueries({ queryKey: ["packages"] });
-      toast.success(response?.data?.message || "Deleted Successfully");
-    },
-    onError: (error) => {
-      toast.error("Error while Deleting Package");
-      console.log("The error is", error);
-    },
-  });
-}
+export const usePackageTable = createCrudTableHook<PackageFormType>({
+  useGetAll: useGetAllPackages,
+  getColumns: getPackageColumns,
+  dataKey: "packages",
+});

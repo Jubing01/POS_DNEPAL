@@ -7,4 +7,9 @@ export const getCompanyColumns = (): ColumnDef<CompanyTypeForm>[] => [
     header: "Company Name",
     cell: ({ row }) => row.getValue("name"),
   },
+  {
+    accessorKey: "address",
+    header: "Address",
+    cell: ({ row }) => row.getValue("address"),
+  },
 ];
