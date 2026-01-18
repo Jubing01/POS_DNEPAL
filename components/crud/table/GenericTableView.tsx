@@ -16,8 +16,8 @@ export default function GenericTableView<T extends FieldValues>({
   table: TableType<T>;
 }) {
   return (
-    <div className="overflow-hidden rounded-md border">
-      <Table>
+    <div className="rounded-md border relative w-full overflow-x-auto">
+      <Table className="min-w-max">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>

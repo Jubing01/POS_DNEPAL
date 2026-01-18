@@ -9,7 +9,7 @@ import {
 import { getColumnsWithActions } from "../clientSchema/crud/columns";
 import { useMemo } from "react";
 
-export function createCrudHooks<TForm extends { id?: string }>({
+export function createCrudHooks<TForm>({
   endpoint,
   queryKey,
 }: {

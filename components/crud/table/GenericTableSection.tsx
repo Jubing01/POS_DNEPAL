@@ -20,7 +20,7 @@ export function GenericTableSection<TForm extends FieldValues, TRow>({
     },
   });
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 w-">
       <GenericTableView table={table} />
       <GenericPaginationView table={table} />
     </div>

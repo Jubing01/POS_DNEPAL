@@ -8,11 +8,10 @@ import { cookies } from "next/headers";
 export async function POST(request) {
   try {
     const body = await request.json();
-    console.log(body)
+    console.log(body);
     const findUser = await prisma.user.findFirst({
       where: {
         email: body.email,
-
       },
     });
     if (!findUser) {
@@ -35,6 +34,7 @@ export async function POST(request) {
       if (passwordCorrect) {
         const token = jwt.sign(
           {
+            id: findUser.id,
             name: findUser.name,
             companyId: findUser.companyId,
             role: findUser.role,

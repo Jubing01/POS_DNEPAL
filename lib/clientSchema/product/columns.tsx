@@ -15,7 +15,7 @@ export const getProductColumns = (): ColumnDef<ProductFormType>[] => [
   {
     accessorKey: "sku",
     header: "SKU",
-    cell: ({ row }) => row.getValue("sku "),
+    cell: ({ row }) => row.getValue("sku"),
   },
   {
     accessorKey: "sellingPrice",

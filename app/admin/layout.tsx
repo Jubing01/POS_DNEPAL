@@ -18,7 +18,7 @@ const AdminLayout = ({ children }) => {
       <SidebarProvider>
         <AppSidebar />
         <SidebarTrigger />
-        <div className="w-full">
+        <div className="flex-1 min-w-0 overflow-hidden">
           <div className="flex w-full h-16 items-center justify-between px-12 border-b-1 mb-8 shadow-[0_4px_2px_-3px_rgba(0,0,0,0.1)]">
             <Link href={"/"} className="text-xl font-bold">
               POS <span className="">DNEPAL</span>

@@ -1,27 +1,56 @@
+import CompanyFormView from "@/components/company/CompanyFormView";
+import {
+  CreateCompanyFormType,
+  CreateCompanyInputType,
+  CreateCompanySchema,
+} from "../clientSchema/company/schema";
 import { CrudConfig } from "../clientSchema/crud/schema";
 import {
-  companyFormSchema,
-  CompanyTypeForm,
-} from "../clientSchema/company/schema";
-import CompanyFormView from "@/components/company/CompanyFormView";
-import { useCompanyTable, useUpdateCompany } from "../hooks/useCompany";
+  useCompanyTable,
+  useCreateCompany,
+  useGetAllCompanies,
+  useDeleteCompany,
+  useUpdateCompany,
+} from "../hooks/useCompany";
 
-export const companyConfig: CrudConfig<CompanyTypeForm, CompanyTypeForm> = {
+export const companyConfig: CrudConfig<
+  CreateCompanyFormType,
+  CreateCompanyInputType
+> = {
   entityName: "Company",
   entityNamePlural: "Companies",
-  description: "Add new Companies to the system",
+  description: "Add new Company to the system",
   schema: {
-    create: companyFormSchema,
-    update: companyFormSchema,
-    row: companyFormSchema,
+    create: CreateCompanySchema,
+    update: CreateCompanySchema,
+    row: CreateCompanySchema,
   },
   defaultValues: {
-    name: "",
+    company: {
+      name: "",
+      address: "",
+      phone: "",
+      pan: "",
+      logoUrl: "",
+      currency: "NPR",
+      rounding: 2,
+    },
+    adminUser: {
+      name: "",
+      email: "",
+      password: "",
+    },
+    subscription: {
+      packageId: "",
+    },
   },
   FormView: CompanyFormView,
-  formId: "form-rhf-categories",
+  formId: "form-rhf-company",
   hooks: {
     useTable: useCompanyTable,
+    useGetAll: useGetAllCompanies,
     useUpdate: useUpdateCompany,
+    useCreate: useCreateCompany,
+    useDelete: useDeleteCompany,
   },
 };

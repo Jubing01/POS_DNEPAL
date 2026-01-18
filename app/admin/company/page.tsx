@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import GenericCrudPage from "@/components/crud/GenericCrudPage";
 import { companyConfig } from "@/lib/config/companyConfig";
 
