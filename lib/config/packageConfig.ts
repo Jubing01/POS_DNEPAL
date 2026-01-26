@@ -1,35 +1,39 @@
+import PackagesFormView from "@/components/packages/PackagesFormView";
+import { packageSchema, PackageType } from "../clientSchema/package/schema";
 import { CrudConfig } from "../clientSchema/crud/schema";
 import {
-	packageFormSchema,
-	PackageFormType,
-} from "../clientSchema/package/schema";
-import PackageFormView from "@/components/package/PackageFormView";
-import { usePackageTable, useUpdatePackage } from "../hooks/usePackage";
+	usePackagesTable,
+	useCreatePackage,
+	useDeletePackage,
+	useGetAllPackages,
+	useUpdatePackage,
+} from "../hooks/usePackage";
 
-export const packageConfig: CrudConfig<PackageFormType, PackageFormType> = {
+export const packagesConfig: CrudConfig<PackageType, PackageType> = {
 	entityName: "Package",
 	entityNamePlural: "Packages",
-	description: "Add new subscription packages to the system",
+	description: "Manage system subscription packages",
 	schema: {
-		create: packageFormSchema,
-		update: packageFormSchema,
-		row: packageFormSchema,
+		create: packageSchema,
+		update: packageSchema,
+		row: packageSchema,
 	},
 	defaultValues: {
 		name: "",
 		price: 0,
 		interval: "MONTHLY",
-		maxProducts: 1,
-		maxStaff: 1,
-		maxWarehouses: 0,
-		maxStockAdjust: 0,
+		maxProducts: 0,
+		maxStaff: 0,
 		enableReports: true,
 		enableAdvanced: false,
 	},
-	FormView: PackageFormView,
-	formId: "form-rhf-package",
+	FormView: PackagesFormView,
+	formId: "form-rhf-packages",
 	hooks: {
-		useTable: usePackageTable,
+		useTable: usePackagesTable,
 		useUpdate: useUpdatePackage,
+		useCreate: useCreatePackage,
+		useDelete: useDeletePackage,
+		useGetAll: useGetAllPackages,
 	},
 };

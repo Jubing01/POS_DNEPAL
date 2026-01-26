@@ -1,9 +1,11 @@
+//@ts-nocheck
 "use client";
-import { CrudPage } from "@/components/crud/CrudPage";
-import { packageConfig } from "@/lib/clientSchema/package/packageConfig";
+
+import GenericCrudPage from "@/components/crud/GenericCrudPage";
+import { packagesConfig } from "@/lib/config/packagesConfig";
 
 const PackagePage = () => {
-  return <CrudPage config={packageConfig} />;
+  return <GenericCrudPage config={packagesConfig} />;
 };
 
 export default PackagePage;

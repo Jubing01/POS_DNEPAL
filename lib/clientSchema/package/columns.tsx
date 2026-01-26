@@ -1,52 +1,35 @@
-import { PackageFormType } from "./schema";
 import { ColumnDef } from "@tanstack/react-table";
+import { PackageType } from "./schema";
 
-export const getPackageColumns = (): ColumnDef<PackageFormType>[] => [
+export const getPackagesColumns = (): ColumnDef<PackageType>[] => [
 	{
 		accessorKey: "name",
 		header: "Package Name",
-		cell: ({ row }) => row.getValue("name"),
 	},
 	{
 		accessorKey: "price",
 		header: "Price",
-		cell: ({ row }) => `Rs. ${row.getValue("price")}`,
 	},
 	{
 		accessorKey: "interval",
 		header: "Interval",
-		cell: ({ row }) => row.getValue("interval"),
 	},
 	{
 		accessorKey: "maxProducts",
 		header: "Max Products",
-		cell: ({ row }) => row.getValue("maxProducts"),
 	},
 	{
 		accessorKey: "maxStaff",
 		header: "Max Staff",
-		cell: ({ row }) => row.getValue("maxStaff"),
 	},
 	{
-		accessorKey: "maxWarehouses",
-		header: "Max Warehouses",
-		cell: ({ row }) => row.getValue("maxWarehouses"),
-	},
-    {
-		accessorKey: "maxStockAdjust",
-		header: "Max StockAdjust",
-		cell: ({ row }) => row.getValue("maxStockAdjust"),
-	},
-    {
 		accessorKey: "enableReports",
-		header: "Report",
-		cell: ({ row }) => row.getValue("enableReports"),
+		header: "Reports",
+		cell: ({ row }) => (row.getValue("enableReports") ? "Yes" : "No"),
 	},
-    {
+	{
 		accessorKey: "enableAdvanced",
 		header: "Advanced",
-		cell: ({ row }) => row.getValue("enableAdvanced"),
+		cell: ({ row }) => (row.getValue("enableAdvanced") ? "Yes" : "No"),
 	},
-    
-
 ];

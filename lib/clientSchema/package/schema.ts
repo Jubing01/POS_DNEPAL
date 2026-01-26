@@ -1,20 +1,18 @@
 import * as z from "zod";
 
-enum SubscriptionInterval {
-	MONTHLY = "MONTHLY",
-	YEARLY = "YEARLY",
-}
-export const packageFormSchema = z.object({
+export const packageSchema = z.object({
 	id: z.string().optional(),
 	name: z.string(),
 	price: z.number(),
-	interval: z.enum(SubscriptionInterval),
+	interval: z.enum(["MONTHLY", "YEARLY"]),
+
 	maxProducts: z.number(),
 	maxStaff: z.number(),
-	maxWarehouses: z.number().optional(),
-	maxStockAdjust: z.number().optional(),
-	enableReports: z.boolean().default(true),
-	enableAdvanced: z.boolean().default(false),
+
+	enableReports: z.boolean(),
+	enableAdvanced: z.boolean(),
+
+	createdAt: z.date().optional(),
 });
 
-export type PackageFormType = z.infer<typeof packageFormSchema>;
+export type PackageType = z.infer<typeof packageSchema>;

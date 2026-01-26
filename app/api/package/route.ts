@@ -1,50 +1,39 @@
-//@ts-nocheck
+import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma"; // your singleton Prisma client
+import { withErrorHandler } from "@/lib/errorHandler";
+import { verifyAuth } from "@/lib/auth";
 
-export async function POST(request: NextRequest) {
-  try {
-    const reqBody = await request.json();
+type Params = { params: Promise<{ id: string }> };
 
-    const newPackage = await prisma.package.create({
-      data: {
-        name: reqBody.name,
-        type: reqBody.type,
-        maxCustomer: parseInt(reqBody.maxCustomer),
-        maxProduct: parseInt(reqBody.maxProduct),
-        price: parseFloat(reqBody.price),
-      },
-    });
+export const POST = withErrorHandler<Params>(async function (
+	request: NextRequest,
+) {
+	const body = await request.json();
+	await verifyAuth();
 
-    return NextResponse.json(
-      {
-        message: "Package created successfully",
-        data: newPackage,
-      },
-      { status: 201 }
-    );
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { message: "Error creating package", error: error },
-      { status: 500 }
-    );
-  }
-}
+	const createdPackage = await prisma.package.create({
+		data: {
+			name: body.name,
+			price: body.price,
+			interval: body.interval,
+			maxProducts: body.maxProducts,
+			maxStaff: body.maxStaff,
+			enableReports: body.enableReports,
+			enableAdvanced: body.enableAdvanced,
+		},
+	});
 
-export async function GET() {
-  try {
-    const packages = await prisma.package.findMany();
+	return NextResponse.json({
+		success: true,
+		updatedPackages: createdPackage,
+	});
+});
 
-    return NextResponse.json({
-      message: "Packages fetched",
-      data: packages,
-    });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { message: "Error fetching packages", error: error },
-      { status: 500 }
-    );
-  }
-}
+export const GET = withErrorHandler<Params>(async function () {
+	const allPackages = await prisma.package.findMany();
+
+	return NextResponse.json({
+		success: true,
+		packages: allPackages,
+	});
+});

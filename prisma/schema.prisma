@@ -203,6 +203,8 @@ model Product {
 
   categoryId String?
   brandId    String?
+  
+  createdBy UserRole
 
   company  Company   @relation(fields: [companyId], references: [id])
   category Category? @relation(fields: [categoryId], references: [id])
