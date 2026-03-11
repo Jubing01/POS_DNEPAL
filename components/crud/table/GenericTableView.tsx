@@ -15,6 +15,7 @@ export default function GenericTableView<T extends FieldValues>({
 }: {
   table: TableType<T>;
 }) {
+  const rows = table.getRowModel().rows || [];
   return (
     <div className="overflow-hidden rounded-md border">
       <Table>
@@ -28,7 +29,7 @@ export default function GenericTableView<T extends FieldValues>({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 );
@@ -37,8 +38,8 @@ export default function GenericTableView<T extends FieldValues>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
+          {rows.length ? (
+            rows.map((row) => (
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}

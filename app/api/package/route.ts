@@ -9,25 +9,29 @@ export async function POST(request: NextRequest) {
     const newPackage = await prisma.package.create({
       data: {
         name: reqBody.name,
-        type: reqBody.type,
-        maxCustomer: parseInt(reqBody.maxCustomer),
-        maxProduct: parseInt(reqBody.maxProduct),
         price: parseFloat(reqBody.price),
+        interval: reqBody.interval,
+        maxProducts: parseInt(reqBody.maxProducts),
+        maxStaff: parseInt(reqBody.maxStaff),
+        maxWarehouses: parseInt(reqBody.maxWarehouses),
+        maxStockAdjust: parseInt(reqBody.maxStockAdjust),
+        enableReports: reqBody.enableReports,
+        enableAdvanced: reqBody.enableAdvanced,
       },
     });
 
     return NextResponse.json(
       {
         message: "Package created successfully",
-        data: newPackage,
+        data: reqBody,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     console.error(error);
     return NextResponse.json(
       { message: "Error creating package", error: error },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -38,13 +42,13 @@ export async function GET() {
 
     return NextResponse.json({
       message: "Packages fetched",
-      data: packages,
+      packages: packages,
     });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
       { message: "Error fetching packages", error: error },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
