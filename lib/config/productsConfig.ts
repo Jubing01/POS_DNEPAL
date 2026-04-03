@@ -1,5 +1,5 @@
 import ProductFormView from "@/components/products/ProductFormView";
-import { productSchema, ProductType } from "../clientSchema/product/schema";
+import { productFormSchema, ProductFormType } from "../clientSchema/product/schema";
 import { CrudConfig } from "../clientSchema/crud/schema";
 import {
   useProductsTable,
@@ -9,14 +9,14 @@ import {
   useUpdateProduct,
 } from "../hooks/useProduct";
 
-export const productsConfig: CrudConfig<ProductType, ProductType> = {
+export const productsConfig: CrudConfig<ProductFormType, ProductFormType> = {
   entityName: "Product",
   entityNamePlural: "Products",
   description: "Add new Products",
   schema: {
-    create: productSchema,
-    update: productSchema,
-    row: productSchema,
+    create: productFormSchema,
+    update: productFormSchema,
+    row: productFormSchema,
   },
   defaultValues: {
     name: "",
