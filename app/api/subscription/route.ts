@@ -1,11 +1,24 @@
-//@ts-nocheck
-
+import { User } from "@/app/generated/prisma/client";
+import { verifyAuth } from "@/lib/auth";
 import { subscriptionSchema } from "@/lib/clientSchema/subscription/schema";
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request) {
+export async function GET() {
   try {
+    const user: User = await verifyAuth();
+
+    if (user.role !== "SUPER_ADMIN") {
+      return NextResponse.json(
+        {
+          sucess: false,
+          subscriptions: [],
+          message: "Only Super admin are allowed to view subscriptions",
+        },
+        { status: 500 },
+      );
+    }
+
     const subscriptions = await prisma.subscription.findMany({
       select: {
         id: true,
@@ -20,6 +33,7 @@ export async function GET(request) {
         },
         company: {
           select: {
+            id: true,
             name: true,
           },
         },
@@ -35,6 +49,11 @@ export async function GET(request) {
         companyName,
         packageName,
         packageType,
+        packageId: eachSubscription.package.id,
+        companyId: eachSubscription.company.id,
+        startDate: new Date(eachSubscription.startDate)
+          .toISOString()
+          .split("T")[0],
       };
     });
 
@@ -54,6 +73,16 @@ export async function GET(request) {
 
 export async function POST(request: NextRequest) {
   try {
+    const user: User = await verifyAuth();
+    if (user.role !== "SUPER_ADMIN") {
+      return NextResponse.json(
+        {
+          message: "Only Super admin are allowed to add new Subscriptions",
+          success: false,
+        },
+        { status: 500 },
+      );
+    }
     const json = await request.json();
     const body = subscriptionSchema.parse(json);
 

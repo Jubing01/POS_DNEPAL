@@ -4,7 +4,7 @@ export const subscriptionSchema = z.object({
   id: z.string().optional(),
   companyId: z.string(),
   packageId: z.string(),
-  startDate: z.string().date(),
+  startDate: z.coerce.date().transform((date) => date.toISOString().split("T")[0]),
   companyName: z.string().optional(),
   packageName: z.string().optional(),
   packageType: z.enum(["MONTHLY", "YEARLY"]).optional(),

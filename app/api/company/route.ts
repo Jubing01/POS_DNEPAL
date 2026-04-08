@@ -1,12 +1,9 @@
-//@ts-nocheck
-
 import { NextRequest, NextResponse } from "next/server";
-import Company from "@/models/Company";
-import dbConnect from "@/lib/mongodb";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { companyWithAdminFormSchema } from "@/lib/clientSchema/company/schema";
 import { verifyAuth } from "@/lib/auth";
+import { User } from "@/app/generated/prisma/client";
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,7 +11,7 @@ export async function POST(request: NextRequest) {
     if (user.role !== "SUPER_ADMIN") {
       return NextResponse.json(
         {
-          success: true,
+          success: false,
           message: "Only Super admin are allowed to create companies",
         },
         { status: 500 },
@@ -64,6 +61,18 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
+    const user: User = await verifyAuth();
+
+    if (user.role !== "SUPER_ADMIN") {
+      return NextResponse.json(
+        {
+          message: "Only Super Admin can view Companies",
+          success: false,
+          companies: [],
+        },
+        { status: 500 },
+      );
+    }
     const companies = await prisma.company.findMany({
       select: {
         id: true,

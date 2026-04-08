@@ -17,9 +17,9 @@ export default function GenericTableView<T extends FieldValues>({
 }) {
   const tableRow = table?.getRowModel()?.rows ?? [];
   return (
-    <div className="overflow-y-scroll overflow-x-auto max-h-[500px] rounded-md border">
-      <Table>
-        <TableHeader>
+    <div className="overflow-y-auto overflow-x-auto max-h-[400px] rounded-md border">
+      <Table className="overflow-hidden w-full">
+        <TableHeader className="sticky top-0 z-10 bg-background">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
@@ -37,7 +37,7 @@ export default function GenericTableView<T extends FieldValues>({
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody className="">
+        <TableBody className="overflow-hidden">
           {tableRow.length ? (
             tableRow.map((row) => (
               <TableRow

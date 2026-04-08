@@ -23,10 +23,15 @@ export function createCrudHooks<TForm extends { id?: string }>({
     return useQuery({
       queryKey: [queryKey],
       queryFn: async () => {
-        const response = await axios.get(baseUrl);
-        return response.data;
-        console.log(response.data);
+        try {
+          const response = await axios.get(baseUrl);
+          return response.data;
+        } catch (error: any) {
+          toast.error(error.response?.data?.message || "Some error occured");
+          throw error;
+        }
       },
+      retry: 1,
     });
   };
   const useCreate = () => {
@@ -107,11 +112,12 @@ export function createCrudTableHook<TRow>({
     const { data: response, isLoading, error } = useGetAll();
 
     // Extract data using dataKey if provided, otherwise use response directly
-    const data = Array.isArray(dataKey ? response?.[dataKey] : response)
-      ? dataKey
-        ? response?.[dataKey]
-        : response
-      : [];
+    const data = useMemo(() => {
+      if (!response) return [];
+
+      const targetData = dataKey ? response[dataKey] : response;
+      return Array.isArray(targetData) ? targetData : [];
+    }, [response, dataKey]);
 
     const columns = useMemo(
       () =>

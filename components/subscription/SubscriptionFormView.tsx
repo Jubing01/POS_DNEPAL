@@ -28,7 +28,7 @@ export const SubscriptionFormView = ({
   form: UseFormReturn<SubscriptionFormType>;
 }) => {
   const { data: companiesData } = useGetAllCompanies();
-  const { data: pacakgesData } = useGetAllPackages();
+  const { data: packagesData } = useGetAllPackages();
   return (
     <FieldGroup>
       <Field
@@ -39,8 +39,11 @@ export const SubscriptionFormView = ({
           Select Company
         </FieldLabel>
         <Select
-          onValueChange={(value) => form.setValue("companyId", value)}
-          value={form.watch("companyId") ?? ""}
+          key={form.watch("companyId")}
+          onValueChange={(value) =>
+            form.setValue("companyId", value, { shouldValidate: true })
+          }
+          value={form.watch("companyId")}
         >
           <SelectTrigger aria-invalid={!!form.formState.errors.companyId}>
             <SelectValue placeholder="Select Company"></SelectValue>
@@ -74,6 +77,7 @@ export const SubscriptionFormView = ({
           Select Package
         </FieldLabel>
         <Select
+          key={form.watch("packageId")}
           onValueChange={(value) => form.setValue("packageId", value)}
           value={form.watch("packageId") ?? ""}
         >
@@ -82,7 +86,7 @@ export const SubscriptionFormView = ({
           </SelectTrigger>
           <SelectContent>
             <SelectGroup id="subscription-packageId">
-              {(pacakgesData?.packages || []).map(
+              {(packagesData?.packages || []).map(
                 (eachPackage: PackageFormType, index: number) => {
                   return (
                     <SelectItem
@@ -106,7 +110,11 @@ export const SubscriptionFormView = ({
         data-invalid={!!form.formState.errors["startDate"]}
       >
         <FieldLabel htmlFor={`subscription-startDate`}>Start Date</FieldLabel>
-        <Input {...form.register("startDate")} type="date" />
+        <Input
+          {...form.register("startDate")}
+          value={form.watch("startDate")}
+          type="date"
+        />
         {form.formState.errors["startDate"] && (
           <FieldError errors={[form.formState.errors["startDate"]]} />
         )}

@@ -31,7 +31,7 @@ const inventoryItems = [
   },
   {
     title: "Brands",
-    url: "/admin/brand",
+    url: "/admin/brands",
     icon: MdCategory
   }
 ];
