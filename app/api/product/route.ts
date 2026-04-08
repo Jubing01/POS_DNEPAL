@@ -2,84 +2,85 @@ import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { verifyAuth } from "@/lib/auth";
 import { UserRole } from "@/app/generated/prisma/enums";
+import { User } from "@/app/generated/prisma/client";
 
 export const GET = async () => {
   try {
     const user = await verifyAuth();
 
-		const products = await prisma.product.findMany({
-			include: {
-				brand: true,
-				category: true,
-			},
-			orderBy: {
-				createdAt: "desc",
-			},
-		});
+    const products = await prisma.product.findMany({
+      include: {
+        brand: true,
+        category: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
 
-		const formatted = products.map((p) => ({
-			...p,
-			brandName: p.brand?.name,
-			categoryName: p.category?.name,
-		}));
+    const formatted = products.map((p) => ({
+      ...p,
+      brandName: p.brand?.name,
+      categoryName: p.category?.name,
+    }));
 
-		return NextResponse.json({
-			success: true,
-			products: formatted, 
-		});
-	} catch (e) {
-		console.log(e, "GET PRODUCT ERROR");
-		return NextResponse.json(
-			{
-				success: false,
-				message: "Error fetching products",
-			},
-			{ status: 500 }
-		);
-	}
+    return NextResponse.json({
+      success: true,
+      products: formatted,
+    });
+  } catch (e) {
+    console.log(e, "GET PRODUCT ERROR");
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Error fetching products",
+      },
+      { status: 500 },
+    );
+  }
 };
 
 export const POST = async (req: Request) => {
-	try {
-		const user = await verifyAuth();
-		const body = await req.json();
+  try {
+    const user: User = await verifyAuth();
+    const body = await req.json();
+    console.log(body);
+    let companyId = user.companyId;
 
-		let companyId = user.companyId;
+    //SUPER_ADMIN support
+    if (user.role === "SUPER_ADMIN") {
+      const company = await prisma.company.findFirst();
 
-		//SUPER_ADMIN support
-		if (user.role === UserRole.SUPER_ADMIN) {
-			const company = await prisma.company.findFirst();
+      if (!company) {
+        return NextResponse.json({
+          success: false,
+          message: "Superadmin cannot Add Products.",
+        });
+      }
 
-			if (!company) {
-				return NextResponse.json({
-					success: false,
-					message: "No company found. Create one first.",
-				});
-			}
+      companyId = company.id;
+    }
 
-			companyId = company.id;
-		}
+    const product = await prisma.product.create({
+      data: {
+        ...body,
+        companyId: companyId!,
+        createdBy: user.role,
+      },
+    });
 
-		const product = await prisma.product.create({
-			data: {
-				...body,
-				companyId: companyId!,
-				createdBy: user.role,
-			},
-		});
-
-		return NextResponse.json({
-			success: true,
-			product,
-		});
-	} catch (e) {
-		console.log(e, "POST PRODUCT ERROR");
-		return NextResponse.json(
-			{
-				success: false,
-				message: "Error creating product",
-			},
-			{ status: 500 }
-		);
-	}
+    return NextResponse.json({
+      success: true,
+      product,
+    });
+  } catch (e) {
+    console.log(e, "POST PRODUCT ERROR");
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Error creating product",
+      },
+      { status: 500 },
+    );
+  }
 };
