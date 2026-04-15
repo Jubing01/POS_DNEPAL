@@ -67,6 +67,7 @@ export const POST = async (req: Request) => {
         sellingPrice: body.sellingPrice,
         unit: body.unit,
         minStock: body.minStock ?? 0,
+        image: "empty.com",
         openingStock: body.openingStock ?? 0,
         categoryId: body.categoryId || null,
         brandId: body.brandId || null,

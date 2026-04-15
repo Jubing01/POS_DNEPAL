@@ -8,47 +8,42 @@ import { UserRole } from "@/app/generated/prisma/enums";
 type Params = { params: Promise<{ id: string }> };
 
 export const POST = withErrorHandler<Params>(async function (
-	request: NextRequest,
-	{ params }: Params,
+  request: NextRequest,
+  { params }: Params,
 ) {
-	const body = await request.json();
+  const body = await request.json();
 
-	const slug = slugify(body.name, {
-		lower: true,
-	});
-	const user = await verifyAuth();
+  const slug = slugify(body.name, {
+    lower: true,
+  });
+  const user = await verifyAuth();
 
-	const createdUser: UserRole = user.role;
+  const createdUser: UserRole = user.role;
 
-	const createdCategory = await prisma.category.create({
-		data: {
-			name: body.name,
-			slug: slug,
-			createdBy: user.role,
-			companyId: user.companyId,
-		},
-	});
+  const createdCategory = await prisma.category.create({
+    data: {
+      name: body.name,
+      slug: slug,
+      createdBy: user.role,
+      companyId: user.companyId,
+    },
+  });
 
-	return NextResponse.json({
-		sucess: true,
-		categories: createdCategory,
-	});
+  return NextResponse.json({
+    sucess: true,
+    categories: createdCategory,
+  });
 });
 
 export const GET = withErrorHandler<Params>(async function (
-	request: NextRequest,
-	{ params }: Params,
-	
+  request: NextRequest,
+  { params }: Params,
 ) {
-	const user = await verifyAuth();
-	const allCategories = await prisma.category.findMany({
-		where: {
-			companyId: user.companyId, //FILTER BY COMPANY
-		},
-	});
+  const user = await verifyAuth();
+  const allCategories = await prisma.category.findMany({});
 
-	return NextResponse.json({
-		success: true,
-		categories: allCategories,
-	});
+  return NextResponse.json({
+    success: true,
+    categories: allCategories,
+  });
 });
