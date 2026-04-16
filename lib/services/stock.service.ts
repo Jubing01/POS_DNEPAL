@@ -53,4 +53,24 @@ export const stockService = {
       },
     });
   },
+  async initializeStock(
+    tx: TransactionClient,
+    {
+      productId,
+      userId,
+      quantity,
+      reason,
+    }: { productId: string; userId: string; quantity: number; reason?: string },
+  ) {
+    return tx.stockLog.create({
+      data: {
+        productId,
+        userId,
+        quantity,
+        action: "INITIAL",
+        balance: quantity,
+        reason,
+      },
+    });
+  },
 };

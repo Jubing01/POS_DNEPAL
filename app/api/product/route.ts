@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { verifyAuth } from "@/lib/auth";
 import { User } from "@/app/generated/prisma/client";
 import { productFormSchema } from "@/lib/clientSchema/product/schema";
+import { stockService } from "@/lib/services/stock.service";
 
 export const GET = async () => {
   try {
@@ -25,7 +26,6 @@ export const GET = async () => {
       categoryName: p.category?.name,
       createdByName: p.createdBy?.name,
     }));
-    console.log(formatted);
     return NextResponse.json({
       success: true,
       products: formatted,
@@ -44,32 +44,40 @@ export const POST = async (req: Request) => {
     const user: User = await verifyAuth();
     const body = await req.json();
 
-    console.log("user.id", user);
     const productData = productFormSchema.parse(body);
 
-    if (user.companyId === null) {
-      return NextResponse.json(
-        { success: false, message: "Super Admin cannot create product" },
-        { status: 403 },
-      );
-    }
+    const product = await prisma.$transaction(async (tx) => {
+      if (user.companyId === null) {
+        return NextResponse.json(
+          { success: false, message: "Super Admin cannot create product" },
+          { status: 403 },
+        );
+      }
+      const product = await tx.product.create({
+        data: {
+          name: productData.name,
+          sku: productData.sku,
+          costPrice: productData.costPrice,
+          sellingPrice: productData.sellingPrice,
+          unit: productData.unit,
+          image: "empty.com",
+          currentStock: productData.currentStock,
+          minStock: productData.minStock,
+          categoryId: productData.categoryId || null,
+          brandId: productData.brandId || null,
+          expiryDate: productData.expiryDate || null,
+          companyId: user.companyId,
+          createdById: user.id,
+        },
+      });
+      await stockService.initializeStock(tx, {
+        productId: product.id,
+        userId: user.id,
+        quantity: product.currentStock,
+        reason: "Initialize Product",
+      });
 
-    const product = await prisma.product.create({
-      data: {
-        name: productData.name,
-        sku: productData.sku,
-        costPrice: productData.costPrice,
-        sellingPrice: productData.sellingPrice,
-        unit: productData.unit,
-        image: "empty.com",
-        currentStock: productData.currentStock,
-        minStock: productData.minStock,
-        categoryId: productData.categoryId || null,
-        brandId: productData.brandId || null,
-        expiryDate: productData.expiryDate || null,
-        companyId: user.companyId,
-        createdById: user.id,
-      },
+      return product;
     });
 
     return NextResponse.json({
