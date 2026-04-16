@@ -7,7 +7,7 @@ export const companyStaffSchema = z.object({
     .string("Required Value")
     .min(8, "Should be minimum of 8 characters long"),
   name: z.string("Required Value").min(4, "Should be minimum of 4 characters"),
-  role: z.enum(["COMPANY_ADMIN", "STAFF"]),
+  role: z.enum(["COMPANY_ADMIN", "STAFF", "CASHIER"]),
   isActive: z.boolean().optional(),
 });
 

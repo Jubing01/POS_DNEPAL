@@ -220,9 +220,9 @@ const ProductFormView = ({
             <FieldLabel>Expiry Date</FieldLabel>
             <Input
               type="date"
-              value={field.value ? field.value.toISOString().split("T")[0] : ""}
+              value={field.value ? field.value : ""}
               onChange={(e) =>
-                field.onChange(e.target.value ? new Date(e.target.value) : null)
+                field.onChange(e.target.value === "" ? null : e.target.value)
               }
             />
             {fieldState.error && <FieldError errors={[fieldState.error]} />}

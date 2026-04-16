@@ -48,7 +48,10 @@ export const StaffFormView = ({
         <Select
           key={form.watch("role")}
           onValueChange={(value) =>
-            form.setValue("role", value as "COMPANY_ADMIN" | "STAFF")
+            form.setValue(
+              "role",
+              value as "COMPANY_ADMIN" | "STAFF" | "CASHIER",
+            )
           }
           value={form.watch("role")}
         >
@@ -58,7 +61,8 @@ export const StaffFormView = ({
           <SelectContent>
             <SelectGroup id="subscription-packageId">
               <SelectItem value={"COMPANY_ADMIN"}>Company Admin</SelectItem>
-              <SelectItem value={"STAFF"}>STAFF</SelectItem>
+              <SelectItem value={"STAFF"}>Staff</SelectItem>
+              <SelectItem value={"CASHIER"}>Cashier</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>

@@ -25,6 +25,9 @@ export const GET = async () => {
       brandName: p.brand?.name,
       categoryName: p.category?.name,
       createdByName: p.createdBy?.name,
+      expiryDate: p.expiryDate
+        ? new Date(p.expiryDate).toISOString().split("T")[0]
+        : null,
     }));
     return NextResponse.json({
       success: true,

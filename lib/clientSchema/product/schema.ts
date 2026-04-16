@@ -14,7 +14,7 @@ export const productFormSchema = z.object({
   brandId: z.string(),
   
   createdByName: z.string().optional(),
-  expiryDate: z.coerce.date().optional(),
+  expiryDate: z.coerce.date().transform((date) => date.toISOString().split("T")[0]),
   categoryName: z.string().optional(),
   brandName: z.string().optional(),
   createdBy: z.string().optional(),

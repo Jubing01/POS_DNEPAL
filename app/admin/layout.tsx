@@ -24,6 +24,7 @@ const AdminLayout = ({ children }) => {
               POS <span className="">DNEPAL</span>
             </Link>
             <div className="flex gap-8 items-center">
+              <Link href={"/cashier"}>POS</Link>
               <div>Settings</div>
               <div>User Profile</div>
               <button

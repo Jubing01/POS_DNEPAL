@@ -44,6 +44,19 @@ export const getProductsColumns = (): ColumnDef<ProductFormType>[] => [
     cell: ({ row }) => row.getValue("currentStock"),
   },
   {
+    accessorKey: "expiryDate",
+    header: "Expiry Date",
+    cell: ({ row }) => (
+      <div>
+        {new Date(row.getValue("expiryDate")).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })}
+      </div>
+    ),
+  },
+  {
     accessorKey: "createdByName",
     header: "Created By",
     cell: ({ row }) => row.getValue("createdByName"),
