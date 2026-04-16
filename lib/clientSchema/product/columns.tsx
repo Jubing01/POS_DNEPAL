@@ -24,8 +24,13 @@ export const getProductsColumns = (): ColumnDef<ProductFormType>[] => [
     cell: ({ row }) => row.getValue("brandName"),
   },
   {
+    accessorKey: "costPrice",
+    header: "Cost Price",
+    cell: ({ row }) => row.getValue("costPrice"),
+  },
+  {
     accessorKey: "sellingPrice",
-    header: "Price",
+    header: "Selling Price",
     cell: ({ row }) => row.getValue("sellingPrice"),
   },
   {
@@ -34,13 +39,13 @@ export const getProductsColumns = (): ColumnDef<ProductFormType>[] => [
     cell: ({ row }) => row.getValue("unit"),
   },
   {
-    accessorKey: "openingStock",
-    header: "Qty",
-    cell: ({ row }) => row.getValue("openingStock"),
+    accessorKey: "currentStock",
+    header: "Current Stock",
+    cell: ({ row }) => row.getValue("currentStock"),
   },
   {
-    accessorKey: "createdBy",
+    accessorKey: "createdByName",
     header: "Created By",
-    cell: ({ row }) => row.getValue("createdBy"),
+    cell: ({ row }) => row.getValue("createdByName"),
   },
 ];

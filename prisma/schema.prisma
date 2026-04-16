@@ -24,6 +24,7 @@ enum UserRole {
   SUPER_ADMIN
   COMPANY_ADMIN
   STAFF
+  CASHIER
 }
 
 enum SubscriptionInterval {
@@ -35,6 +36,16 @@ enum StockActionType {
   STOCK_IN
   STOCK_OUT
   ADJUSTMENT
+  RETURN
+  DAMAGE
+  INITIAL
+}
+
+enum ProductUnitType {
+  KG
+  PIECE
+  LITER
+  METER
 }
 
 enum AuditAction {
@@ -54,6 +65,12 @@ enum NotificationType {
   STOCK_ACTIVITY
   STAFF_ACTIVITY
   WARNING
+}
+
+enum SaleStatus {
+  PENDING
+  PAID
+  CANCELLED
 }
 
 /**
@@ -80,9 +97,10 @@ model User {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   stockLogs StockLog[]
+  products  Product[]
 }
 
-model LoginLog { 
+model LoginLog {
   id        String   @id @default(uuid())
   userId    String
   user      User     @relation(fields: [userId], references: [id])
@@ -186,35 +204,71 @@ model Subscription {
  * ===========================
  */
 
-model Product { 
+model Product {
   id        String @id @default(uuid())
   companyId String
 
   name         String
-  sku          String    @unique
+  sku          String
   costPrice    Float
-  sellingPrice Float?
-  unit         String
-  image        String
-  batchId      String?
+  sellingPrice Float
+  unit         ProductUnitType
+  image        String?
   minStock     Int
-  openingStock Int 
-  expiryDate   DateTime?
-  status       Boolean   @default(true)
+  currentStock Int     @default(0)
+
+  expiryDate DateTime?
+  status     Boolean   @default(true)
 
   categoryId String?
   brandId    String?
-  
-  createdBy UserRole
+
+  createdById String?
+  createdBy   User?   @relation(fields: [createdById], references: [id])
 
   company  Company   @relation(fields: [companyId], references: [id])
   category Category? @relation(fields: [categoryId], references: [id])
   brand    Brand?    @relation(fields: [brandId], references: [id])
 
   stockLogs StockLog[]
+  saleItems SaleItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([companyId, sku])
+}
+
+model Sale {
+  id        String @id @default(uuid())
+  companyId String
+  userId    String
+
+  subtotal Float
+  discount Float @default(0)
+  vat      Float @default(0)
+  total    Float
+
+  status SaleStatus
+
+  items     SaleItem[]
+  stockLogs StockLog[] // 🔗 optional but useful
+
+  createdAt DateTime @default(now())
+}
+
+model SaleItem {
+  id        String @id @default(uuid())
+  saleId    String
+  companyId String
+  productId String
+
+  quantity Int
+  price    Float
+  total    Float
+
+  sale    Sale    @relation(fields: [saleId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
 }
 
 model StockLog {
@@ -226,13 +280,13 @@ model StockLog {
   action   StockActionType
 
   balance Int?
-  reason String?
-  source String?
+  reason  String?
 
-  warehouse String?
+  saleId String?
 
   product Product @relation(fields: [productId], references: [id])
   user    User    @relation(fields: [userId], references: [id])
+  sale    Sale?   @relation(fields: [saleId], references: [id])
 
   createdAt  DateTime  @default(now())
   auditLog   AuditLog? @relation(fields: [auditLogId], references: [id])
@@ -272,17 +326,17 @@ model CompanyCategory {
 }
 
 model Brand {
-  id        String   @id @default(uuid())
+  id        String @id @default(uuid())
   companyId String
 
   name   String
-  status Boolean  @default(true)   // 
+  status Boolean @default(true) // 
 
   company  Company   @relation(fields: [companyId], references: [id])
   products Product[]
 
-  createdAt DateTime @default(now())  //
-  updatedAt DateTime @updatedAt       //
+  createdAt DateTime @default(now()) //
+  updatedAt DateTime @updatedAt //
 }
 
 /**

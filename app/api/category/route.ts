@@ -4,6 +4,7 @@ import { withErrorHandler } from "@/lib/errorHandler";
 import { verifyAuth } from "@/lib/auth";
 import slugify from "slugify";
 import { UserRole } from "@/app/generated/prisma/enums";
+import { User } from "@/app/generated/prisma/client";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -39,8 +40,10 @@ export const GET = withErrorHandler<Params>(async function (
   request: NextRequest,
   { params }: Params,
 ) {
-  const user = await verifyAuth();
-  const allCategories = await prisma.category.findMany({});
+  const user: User = await verifyAuth();
+  const allCategories = await prisma.category.findMany({
+    where: { companyId: user.companyId },
+  });
 
   return NextResponse.json({
     success: true,

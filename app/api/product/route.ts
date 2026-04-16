@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { verifyAuth } from "@/lib/auth";
 import { User } from "@/app/generated/prisma/client";
+import { productFormSchema } from "@/lib/clientSchema/product/schema";
 
 export const GET = async () => {
   try {
@@ -11,6 +12,7 @@ export const GET = async () => {
       include: {
         brand: true,
         category: true,
+        createdBy: true,
       },
       orderBy: {
         createdAt: "desc",
@@ -21,8 +23,9 @@ export const GET = async () => {
       ...p,
       brandName: p.brand?.name,
       categoryName: p.category?.name,
+      createdByName: p.createdBy?.name,
     }));
-
+    console.log(formatted);
     return NextResponse.json({
       success: true,
       products: formatted,
@@ -31,7 +34,7 @@ export const GET = async () => {
     console.error("GET PRODUCT ERROR:", e.message);
     return NextResponse.json(
       { success: false, message: "Error fetching products" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 };
@@ -41,39 +44,31 @@ export const POST = async (req: Request) => {
     const user: User = await verifyAuth();
     const body = await req.json();
 
-    console.log("Incoming Product Body:", body);
+    console.log("user.id", user);
+    const productData = productFormSchema.parse(body);
 
-    if (!body.name || !body.sku) {
-      return NextResponse.json(
-        { success: false, message: "Name and SKU are required" },
-        { status: 400 }
-      );
-    }
-
-    let companyId = user.companyId;
-    
-    if (user.role === "SUPER_ADMIN") {
+    if (user.companyId === null) {
       return NextResponse.json(
         { success: false, message: "Super Admin cannot create product" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
     const product = await prisma.product.create({
       data: {
-        name: body.name,
-        sku: body.sku,
-        costPrice: body.costPrice,
-        sellingPrice: body.sellingPrice,
-        unit: body.unit,
-        minStock: body.minStock ?? 0,
+        name: productData.name,
+        sku: productData.sku,
+        costPrice: productData.costPrice,
+        sellingPrice: productData.sellingPrice,
+        unit: productData.unit,
         image: "empty.com",
-        openingStock: body.openingStock ?? 0,
-        categoryId: body.categoryId || null,
-        brandId: body.brandId || null,
-        expiryDate: body.expiryDate || null,
-        companyId: companyId!,
-        createdBy: user.role,
+        currentStock: productData.currentStock,
+        minStock: productData.minStock,
+        categoryId: productData.categoryId || null,
+        brandId: productData.brandId || null,
+        expiryDate: productData.expiryDate || null,
+        companyId: user.companyId,
+        createdById: user.id,
       },
     });
 
@@ -88,7 +83,7 @@ export const POST = async (req: Request) => {
         success: false,
         message: e.message || "Error creating product",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 };
