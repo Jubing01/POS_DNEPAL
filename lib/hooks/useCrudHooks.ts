@@ -42,7 +42,7 @@ export function createCrudHooks<TForm extends { id?: string }>({
         return response.data;
       },
       onSuccess: (response) => {
-        toast.success(response.data?.message || "some error occurred");
+        toast.success(response.data?.message || "Added successfully");
 
         queryClient.invalidateQueries({ queryKey: [queryKey] });
       },
@@ -59,7 +59,7 @@ export function createCrudHooks<TForm extends { id?: string }>({
         return response.data;
       },
       onSuccess: (response) => {
-        console.log(response);
+        toast.success(response.data?.message || "Updated successfully");
         queryClient.invalidateQueries({ queryKey: [queryKey] });
       },
       onError: (error) => {

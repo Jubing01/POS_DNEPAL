@@ -6,7 +6,7 @@ export function useCheckoutProducts() {
   return useMutation({
     mutationFn: checkoutProducts,
     onSuccess: (response) => {
-      toast.success(response.data?.message || "some error occurred");
+      toast.success(response.data?.message || "Checkout successfully");
     //   queryClient.invalidateQueries({ queryKey: [queryKey] });
     },
     onError: (error: any) => {
