@@ -27,14 +27,13 @@
 //   .finally(() => prisma.$disconnect());
 
 import { PrismaClient } from "@prisma/client";
-import { UserRole } from "@/app/generated/prisma/enums";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
   const existing = await prisma.user.findFirst({
-    where: { role: UserRole.SUPER_ADMIN },
+    where: { role: "SUPER_ADMIN" },
   });
 
   if (existing) return;
@@ -43,7 +42,7 @@ async function main() {
     data: {
       email: "superadmin@gmail.com",
       password: await bcrypt.hash("Superadmin", 10),
-      role: UserRole.SUPER_ADMIN,
+      role: "SUPER_ADMIN",
       isActive: true,
     },
   });
