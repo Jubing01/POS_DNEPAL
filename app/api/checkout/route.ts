@@ -3,10 +3,7 @@ import { verifyAuth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function POST(request: NextRequest) {
   const body = await request.json();
   const user: User = await verifyAuth();
   if (!user.companyId) {
@@ -62,10 +59,7 @@ export async function POST(
   });
 }
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function GET(request: NextRequest) {
   const sales = await prisma.sale.findMany({
     include: {
       items: {
