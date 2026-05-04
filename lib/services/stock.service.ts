@@ -26,7 +26,7 @@ export const stockService = {
     });
   },
   async stockOut(
-    tx: TransactionClient,
+    tx: any,
     {
       productId,
       userId,
@@ -52,7 +52,7 @@ export const stockService = {
     });
   },
   async initializeStock(
-    tx: TransactionClient,
+    tx: any,
     {
       productId,
       userId,
